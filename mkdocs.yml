@@ -1,0 +1,19 @@
+site_name: AuthWA
+repo_url: https://github.com/foxtec198/AuthWA
+repo_name: Guilherme Breve/AuthWA
+edit_uri: tree/main/
+
+theme:
+  palette:
+    scheme: slate
+    primary: green
+  name: material
+  language: pt-BR
+  logo: assets/robot.png
+  favicon: assets/robot.png
+
+markdown_extensions:
+  - attr_list
+
+extra_css:
+  - stylesheets/extra.css
