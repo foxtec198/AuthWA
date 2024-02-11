@@ -1,0 +1,12 @@
+time
+datetime
+os
+system
+pyautogui
+pyperclip
+ctpaperclip
+pandas
+dataframe_image
+sqlalchemy
+
+
