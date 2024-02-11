@@ -1,3 +1,4 @@
+material-mkdocs
 pyautogui
 pyperclip
 ctpaperclip
