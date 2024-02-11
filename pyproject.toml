@@ -13,7 +13,7 @@ classifiers = [
     "Intended Audience :: Developers",
 ]   
 [tool.poetry.urls]
-"Documentação" = ""
+"Documentação" = "https://authwa.readthedocs.io/pt/latest/"
 
 
 [tool.poetry.dependencies]
