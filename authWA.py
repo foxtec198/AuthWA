@@ -35,8 +35,8 @@ class WA:
         self.engine = create_engine(f'mssql://{uid}:{pwd}@{server}/{database}?driver={driver}')
         try:
             self.conn = self.engine.connect()
-            return True
-        except: return False
+            return 'Conexão realizada com sucesso'
+        except: return "Conexão Invalida"
         
     def enviar_msg(self, nome, mensagem, img = None):
         # Entra no Whats

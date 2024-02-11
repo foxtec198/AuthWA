@@ -5,7 +5,6 @@
 ![MicrosoftSQLServer](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)
 ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white)
 ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
 
 ## Instalação
 
@@ -23,6 +22,11 @@
 
     whats.enviar_msg()
 ## Preparando o ambiente de envio
+Para que seu codigo funcione é importante que deixe o whatsapp aberto, pois o codigo irá usar um atalho para acessa-lo *Alt + Tab*. 
+
+![alt text](image.png)
+
+*É importante também que __não movimente ou clique com o mouse e nem pressione nenhuma tecla__ durante o processo, o indicado é ter uma maquina como servidor para que posso ter mais eficiencia, mas não é obrigatório.* 
 
 ## Whatsapp
 Envio de mensagens simples e com Imagens no o Whatsapp, para deixar sua imaginação fluir e construir suas automações!
@@ -49,14 +53,18 @@ Para envio de mensagens simples, usando o modulo __WA__, é bem fácil, porém l
 ### enviar_msg()
 Está função faz um envio __simples ou com uma imagem__ embutida, para isto precisa ter preparado o ambiente.
 
+> **Parametros**
+
+> Nome = Nome do Contato a ser enviado a mensagem
+
+> Mensagem = Mensagem a ser enviada ou a Legenda que vai na imagem
+
+> Img = Aqui você devera colocar o caminho da Imagem a ser enviada
+
     from authWA import WA
 
     whats = WA()
 
-    # Parametros
-    # Nome = Nome do Contato a ser enviado a mensagem
-    # Mensagem = Mensagem a ser enviada ou a Legenda que vai na imagem
-    # img = Aqui você devera colocar o caminho da Imagem a ser enviada
 
     # Envio sem imagem
     whats.enviar_msg(
@@ -72,7 +80,66 @@ Está função faz um envio __simples ou com uma imagem__ embutida, para isto pr
     )
 
 ### sql_connection()
-Lembrem-se 
+Para realizar uma conexão com o banco de dados, precisamos de alguns parametros, lembre-se sempre que for realizar uma conexão com o banco de dados, faze-la no **incio** do projeto!
+> **Parametros**
+>> **Obrigatórios**
+
+> uid = Usuário DB
+
+> pwd = Senha de Acesso do DB
+
+> sevrer = Server do
+
+>> **Opcional caso for utilizar o SQL Server**
+
+> database = Banco de Dados a ser utilizado
+
+> driver = Qual driver usar você encontra no site do SQL Alchemy:
+
+> <a href = 'https://docs.sqlalchemy.org/en/20/core/engines.html'> Drivers do SQLAlchemy</a>
+
+SQLite
+
+![SQLITE](image-1.png)
+
+SQL Server
+
+![SQL SERVER](image-2.png)
+
+MySQL
+
+![MYSQL](image-3.png)
+
+### Exemplo de código
+
+    from authWA import WA
+
+    whats = WA()
+
+    # Obrigatorio
+    conn = whats.sql_connection(
+        uid = "usuario.aqui",
+        pwd = "suasenhavemaqui",
+        server = "10.0.1.0",
+    )
+
+    # Opcionais
+    conn = whats.sql_connection(
+        uid = "usuario.aqui",
+        pwd = "suasenhavemaqui",
+        server = "10.0.1.0",
+        database = "DATABASE",
+        driver = "SQL Server"
+    )   
+
+    print(conn)
+
+    # Output
+    // "Conexão realizada com sucesso!" ou "Conexão Invalida"
+
+Pronto conexão realizada 
+
+
 
 ## Parcial
 
