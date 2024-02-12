@@ -6,8 +6,7 @@ from pandas import read_sql # Tratamento de Dados
 from dataframe_image import export # Export png
 from os import system, mkdir # Systems
 from sqlalchemy import create_engine # SQL Server
-from datetime import datetime
-import sys
+from datetime import datetime #Tempo Real
 
 def atalho(*args):
     with pg.hold(args[0]):
@@ -84,9 +83,8 @@ class Parcial:
         self.hora_final = hora_final
 
         self.whats = WA()
-        login = self.whats.sql_connection(uid, pwd, server)
-        # if not login: sys.exit('Login SQL não realizado, verifique as credenciais... ')
-        
+        self.whats.sql_connection(uid, pwd, server)
+
     def update(self):
         self.hora = int(st('%H'))
         self.now = datetime.now()
@@ -97,34 +95,41 @@ class Parcial:
     def definir_inicio(self):
         self.update()
         alternated = 0
-        if self.hora_inicio == self.hora:
-            alternated = self.hora_inicio
-        elif self.hora > self.hora_inicio:
-            alternated = self.hora + 1
-        elif self.hora < self.hora_inicio:
-            alternated = self.hora_inicio
+        
+        if self.hora == 0: alternated = 0
+
+        if self.hora_inicio == self.hora: alternated = self.hora_inicio
+
+        if self.hora > self.hora_inicio: alternated = self.hora + 1
+
+        if self.hora < self.hora_inicio: alternated = self.hora_inicio
+
         return alternated
     
     def main_loop(self, funcs: list):
         h = self.definir_inicio()
-        while True:
-            fds = st('%a')
-            self.update()
-            for f in funcs:
-                if self.hora == h:
-                    if type(f) == list and fds == 'Sat' or fds == 'Sun':
-                        for i in f:
-                            i()
-                        h += 1
-                    elif type(f) != list and fds != 'Sat' and fds != 'Sun':
-                        f()
-                        h += 1
-                elif type(f) == dict:
-                    he = st('%X')
-                    for item in f:
-                        horario = item
-                        func = f[item]
-                        if he >= f'{horario}:00' and he <= f'{horario}:01':
-                            func()
-                elif self.hora == self.hora_final: h = self.hora_inicio
-                display(h)
+        if type(funcs) == list: 
+            while True:
+                fds = st('%a')
+                self.update()
+                for f in funcs:
+                    if self.hora == h:
+                        if type(f) == list and fds == 'Sat' or fds == 'Sun':
+                            for i in f:
+                                i()
+                            h += 1
+                        if type(f) == tuple and fds != 'Sat' and fds != 'Sun':
+                            for i in f:
+                                i()
+                            h += 1
+                    if type(f) == dict:
+                        he = st('%X')
+                        for item in f:
+                            horario = item
+                            func = f[item]
+                            if he >= f'{horario}:00' and he <= f'{horario}:01':
+                                func()
+                    if self.hora == 24: h = 0
+                    if self.hora == self.hora_final: h = self.hora_inicio
+                    display(h)
+        else: return 'Isto não é uma lista'
