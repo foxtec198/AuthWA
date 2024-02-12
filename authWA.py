@@ -85,7 +85,8 @@ class Parcial:
 
         self.whats = WA()
         login = self.whats.sql_connection(uid, pwd, server)
-        if not login: sys.exit('Login SQL não realizado, verifique as credenciais... ')
+        # if not login: sys.exit('Login SQL não realizado, verifique as credenciais... ')
+        
     def update(self):
         self.hora = int(st('%H'))
         self.now = datetime.now()

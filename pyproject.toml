@@ -1,10 +1,10 @@
 [tool.poetry]
 name = "authwa"
-version = "0.1.0"
+version = "0.2.1"
 description = "Automações WhatsApp"
 authors = ["Guilherme Breve <64221923+foxtec198@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "authWA"}]
+packages = [{include = "authWA.py"}]
 classifiers = [
     "Programming Language :: Python :: 3.11",
     "Environment :: Console",
@@ -12,8 +12,9 @@ classifiers = [
     "Natural Language :: Portuguese (Brazilian)",
     "Intended Audience :: Developers",
 ]   
+
 [tool.poetry.urls]
-"Documentação" = "https://authwa.readthedocs.io/pt/latest/"
+"Documentação" = "https://authwa.readthedocs.io"
 
 
 [tool.poetry.dependencies]
