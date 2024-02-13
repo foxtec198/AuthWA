@@ -113,15 +113,15 @@ class Parcial:
                     if self.hora == 24: h = 0
                     if self.hora > self.hora_final: h = self.hora_inicio
                     if type(f) == dict:
-                        atalho('alt','tab')
                         sl(1)
                         he = st('%X')
                         for item in f:
                             horario = item
                             func = f[item]
                             if he >= f'{horario}:00' and he <= f'{horario}:05':
+                                atalho('alt','tab')
                                 func()
-                        atalho('alt','tab')
+                                atalho('alt','tab')
                     if self.hora == h:
                         atalho('alt','tab')
                         sl(1)
