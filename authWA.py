@@ -38,9 +38,6 @@ class WA:
         except: return "Conexão Invalida"
         
     def enviar_msg(self, nome, mensagem, img = None):
-        # Entra no Whats
-        atalho('alt','tab')
-        sl(1)
         # Pesquisa a Conversa
         atalho('ctrl','f')
         sl(2)
@@ -66,7 +63,7 @@ class WA:
         atalho('ctrl','f')
         atalho('ctrl','a')
         pg.press('backspace')
-        atalho('alt','tab')
+        # atalho('alt','tab')
 
     def criar_imagem_SQL(self, consulta, arquivo = 'dist/temp.png'):
         try:
@@ -116,13 +113,18 @@ class Parcial:
                     if self.hora == 24: h = 0
                     if self.hora > self.hora_final: h = self.hora_inicio
                     if type(f) == dict:
+                        atalho('alt','tab')
+                        sl(1)
                         he = st('%X')
                         for item in f:
                             horario = item
                             func = f[item]
                             if he >= f'{horario}:00' and he <= f'{horario}:05':
                                 func()
+                        atalho('alt','tab')
                     if self.hora == h:
+                        atalho('alt','tab')
+                        sl(1)
                         if type(f) == list and fds == 'Sat' or fds == 'Sun':
                             for i in f:
                                 i()
@@ -131,5 +133,6 @@ class Parcial:
                             for i in f:
                                 i()
                             h += 1
+                        atalho('alt','tab')
                     display(h)
         else: return 'Isto não é uma lista'
