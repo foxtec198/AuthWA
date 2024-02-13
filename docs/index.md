@@ -31,7 +31,7 @@ Após criar abra o terminal(PowerShell) ou CMD.
 >> apertando __WIN + R__ e digitando __CMD__ pressione *Enter*
 
 > No Linux: 
->> apertando __CTRL + T__ ou __CTRL + ALT + T__ ou __COMMAND//WIN__ e digite *TERMINAL*
+>> apertando __CTRL + T__ ou __CTRL + ALT + T__ ou pressione __COMMAND ou WIN__ e digite *TERMINAL*
 
 Terminal
 
@@ -45,6 +45,10 @@ Para que seu codigo funcione é importante que deixe o whatsapp aberto, pois o c
 ![alt text](image.png)
 
 É importante também que __não movimente ou clique com o mouse e nem pressione nenhuma tecla__ durante o processo, o indicado é ter uma maquina como servidor para que o codigo tenha mais eficiencia, mas não é obrigatório.
+
+<!-- ![MenCoffee](https://th.bing.com/th/id/OIG3.F5iVKGOiGwjchlga1ZcZ?w=1024&h=1024&rs=1&pid=ImgDetMain){width = '50', .center} -->
+
+<img src='https://th.bing.com/th/id/OIG3.F5iVKGOiGwjchlga1ZcZ?w=1024&h=1024&rs=1&pid=ImgDetMain' alt ='mencoffee' width=400/>
 
 ## Whatsapp
 Envio de mensagens simples e com Imagens no o Whatsapp, para deixar sua imaginação fluir e construir suas automações!
@@ -210,7 +214,8 @@ Sabe Aquela mensagem te lembrando de fazer algo ou de uma agenda que você não 
 
 Aquela mensagem para seus clientes que lembrando das promoções, sempre em um horario especifico, com o Parcial, você consegue facilmente.
 
-### Parcial - Hora a Hora
+### Parcial - O começo
+
 Bom, para criarmos o hora a hora, é bem simples, vamos usar alguns conceitos do WA() então é importante que tenha dominio com este modulo
 
     from authWA import Parcial
@@ -225,12 +230,12 @@ Bom, para criarmos o hora a hora, é bem simples, vamos usar alguns conceitos do
         '10.0.0.1' # Exemplo de Servidor
     )
 
-    # Normalmente você quer usar o Parcial quando se trata de muitos contatos!
-    # Pensando nisso, vamos utilizar um lista para os contatos 
-    # Lembrano que ira enviar somente dias da Semana ou seja de Segunda a Sexta
-    # Para fim de semanas e horarios exatos, iremos falar depois!
-
     lista_de_contatos = []
+Normalmente você quer usar o Parcial quando se trata de muitos contatos!
+Pensando nisso, vamos utilizar um lista para os contatos 
+Lembrano que ira enviar somente dias da Semana ou seja de Segunda a Sexta, para fim de semanas e horarios exatos, iremos falar depois!
+
+**Lambda:**
 
 Dentro desta lista, vamos passar funções, mas para que ela não seja chamada, iremos usar uma função do Python chamada **lambda:**
 
@@ -244,6 +249,16 @@ Dentro desta lista, vamos passar funções, mas para que ela não seja chamada, 
         # Agora iremos criar a lambda!
         lambda: function()
     ]
+
+### Parcial - Dias de Semana
+
+Para criarmos as parciais do dias da semana iremos usar uma *tuple*
+
+    tuple = (
+        lambda:function2()
+        lambda:function()s, 
+    )
+
 No lugar desta **function()** iremos usar o nosso conhecimento do módulo WA(), iremos chamar a função de mensagem deste modulo dentro da *lambda*
 
 Mas não precisamos importar o modulo WA() pois ele ja esta embutido no Parcial(), ele esta definido como *whats*, sendo assim podemos chama-lo usando a variavel onde colocamos o Parcial().
@@ -252,7 +267,11 @@ Mas não precisamos importar o modulo WA() pois ele ja esta embutido no Parcial(
 
     p = Parcial('','','')
 
-    lista_de_contatos = [
+    # Lista que criamos acima
+    lista_de_contatos = []
+
+    # Criando a tupla dos dias de semana
+    dds = (
         lambda: p.whats.enviar_mensagem(
             nome = "Contato 1",
             mensagem = "Codando com AuthWA!"
@@ -265,7 +284,10 @@ Mas não precisamos importar o modulo WA() pois ele ja esta embutido no Parcial(
             nome = "Contato 3",
             mensagem = "Codando com AuthWA!"
         ),
-    ]
+    )
+
+    # Usamos o APPEND para adicionarmos a tuple(dds) na lista(lista_de_contatos)
+    lista_de_contatos.append(dds)
 
 Certo, mas só fizemos a lista, ele ainda não vai executar de forma automática !
 
@@ -291,4 +313,179 @@ Caso tenha sido ao contrario, inciado antes ou iniciado depois da hora final, el
 
 Exemplos: 
 
- Inicar o codigo as 06 com o inicio previsto as 8
+ > - Inicar o codigo as 06 com o inicio previsto as 8, quando der 08:00 do mesmo dia ele ira executar!
+
+ > - Iniciar o código as 19 com o fim as 18, ele só ira executar no inicio do outro dia!
+
+ Tendo entendido isso, agora iremos iniciar o nosso *loop*, para isso temos uma função especifica, o *main_loop()*, onde vamos passar como parametro a nossa **lista_de_contatos:**
+    
+    from authWA import Parcial
+
+    p = Parcial('','','')
+
+    lista_de_contatos = []
+
+    dds = (
+        lambda: p.whats.enviar_mensagem(
+            nome = "Contato 1",
+            mensagem = "Codando com AuthWA!"
+        ),
+        lambda: p.whats.enviar_mensagem(
+            nome = "Contato 2",
+            mensagem = "Codando com AuthWA!"
+        ),
+        lambda: p.whats.enviar_mensagem(
+            nome = "Contato 3",
+            mensagem = "Codando com AuthWA!"
+        ),
+    )
+
+    lista_de_contatos.append(dds)
+
+    # Lembrando que temos que passar obrigatoriamente uma lista !
+    p.main_loop(lista_de_contatos)
+
+**Output//Saida**
+Podemos ver abaixo,, que ele nos retorna o horario atual e quando a parcial sera iniciada!
+
+*Lembrando que esse processo é automatico, então não se preocupe com isso!*
+
+![ExecutandoPrimeiroloop](image-5.png)
+
+### Parcial - Fim de Semana
+
+Bom para fazermos o fim de semana precisamos enteder os dias de semana, não pule pra cá, sem antes entender o __Dias da Semana__
+
+Para o sistema entender que precisa ser executado aos fins de semana, adicionarmos funções que serão realizadas, para isso iremos usar um *lista!* Veja o exemplo abaixo.
+
+    from authWA import Parcial
+
+    p = Parcial('','','')
+
+    lista_de_contatos = []
+
+    # Tupla dos Dias de Semana
+    dds = (
+        p.whats.enviar_msg(
+            nome='Contato 1',
+            mensagem = 'Coda comigo'
+        )
+    )
+
+    # Lista do Fim de Semana
+    fds = [
+        p.whats.enviar_msg(
+            nome='Contato do fim de semana',
+            mensagem = 'Estamos atendendo venha conferir nossas promoções'
+        )
+    ]
+
+    lista_de_contatos.append(dds)
+    lista_de_contatos.append(fds)
+
+    p.main_loop(lista_de_contatos)
+
+> *Uma lista dentro de outra lista?*
+
+> Sim o tem de ser exatamente assim !
+
+> O sistema entende *tuplas* como dias de semana e *listas* como fim de semana, mas lembre-se que ambas precisam estar dentro de uma lista __master__, que nesse caso seria nossa *lista_de_contatos*
+
+Caso seus contatos do fim de semana sejam os mesmo que dos Dias de semana, podemos fazer da seguinte maneira:
+
+> Pra economizarmos código, podemos converter nossa tupla em lista!
+> E desta forma, podemos ter os mesmos contatos do dias de semana
+
+    from authWA import Parcial
+
+    p = Parcial('','','')
+
+    lista_de_contatos = []
+
+    dds = (
+            p.whats.enviar_msg(
+                nome='Contato 1',
+                mensagem = 'Coda comigo'
+            ),
+        )
+
+    # Desta forma teremos os mesmos contatos no fim de semana
+    fds = list(dds)
+
+    lista_de_contatos.append(fds)
+
+    p.main_loop(lista_de_contatos)
+
+### Parcial - Horarios Especificos
+Bom se ja usamos tuplas e listas agora o que vamos usar para os horaários especificos, pois bem se você pensou em dict ou dicionários, você acertou na mosca!
+
+Como esses parametros não dependem de ser enviados hora a hora, temos de passar a função com o *lambda* dentro de um __dict__, sua estrutura sempre seguirá assim:
+
+ *dict = {horario:funtion()}*
+ 
+  veja o exemplo, abaixo:
+
+    from authWA import Parcial
+
+    p = Parcial('','','')
+
+    lista_de_contatos = []
+
+    agenda = {
+        '10:00':lambda: p.whats.enviar_msg(
+            'Contato 1',
+            'Não esqueça de tal coisa'
+            ),
+        '15:30':lambda: p.whats.enviar_msg(
+            'Contato 2', 
+            'Vá ao dentista'
+            ),
+        '22:00':lambda: p.whats.enviar_msg(
+            'Contato 3',
+            'Horá de dormir!!!!!!!'
+            )
+        '22:00':lambda: p.whats.enviar_msg(
+            'Contato 3',
+            'Sua agenda de amanha!',
+            p.whats.criar_imagem_SQL(
+                'SELECT * FROM AGENDA WHERE DAY = TODAY() + 1'
+                )
+            )
+        }
+
+    lista_de_contatos.append(agenda)
+
+> Então sim você consegue ter sua agenda pessoal te lembrando das coisas por mensagem rsrs.
+
+Pronto agora você ja sabe como usar o __AuthWA__ espero ter ajudado. 🥰💖
+
+## Issues // Problemas
+![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
+
+Caso tenha algum bug oui problema não hesitaremos em consertar, por mais que nosso log de erros seja efetivo, peço que abram sim um ISSUE no githubs, talvez a duvida de vocês ou o problema, tamém seja o de outros, agradeço a compreensão!
+
+> Link para abertura de ISSUE
+
+> <a href = 'https://github.com/foxtec198/AuthWA/issues/new'> Clique aqui para abrir uma nova ISSUE </a>
+
+## Sobre
+<br>
+<img src='https://avatars.githubusercontent.com/u/64221923?v=4' width=150 style='border-radius:50%;'/>
+<b>Guilherme Breve - Analista</b>
+
+<br>
+
+Atualmente trabalho como analista de Projetos, e como desenvolvedor full stack, tenho uma empresa de desenvolvimento de sistema para gestões comerciais e demais areas!
+
+Minha intenção com o AuthWA é ajudar as pessoas, sem lucros financeiros.
+
+Mas caso eu tenha te ajudado de alguma forma e creia que isso deva ser recompensado deixarei abaixo algumas forams de contribuir. 🥰
+
+Muito obrigado por ter lido esta documentação e por usar o AuthWA, caso queiram fazer um fork e melhorar, estamos sempre dispostos a melhorias e progressões. 💖💖
+
+<h1 style='text-align: center'><b>Pix:</b></h1>
+
+<div style='display:flex; justify-content: center;'>
+    <img src = pix.png width=200 style='border-radius: 20px'/>
+</div>
+
