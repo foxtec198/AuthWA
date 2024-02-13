@@ -113,6 +113,8 @@ class Parcial:
                 fds = st('%a')
                 self.update()
                 for f in funcs:
+                    if self.hora == 24: h = 0
+                    if self.hora > self.hora_final: h = self.hora_inicio
                     if type(f) == dict:
                         he = st('%X')
                         for item in f:
@@ -120,7 +122,7 @@ class Parcial:
                             func = f[item]
                             if he >= f'{horario}:00' and he <= f'{horario}:05':
                                 func()
-                    elif self.hora == h:
+                    if self.hora == h:
                         if type(f) == list and fds == 'Sat' or fds == 'Sun':
                             for i in f:
                                 i()
@@ -129,7 +131,5 @@ class Parcial:
                             for i in f:
                                 i()
                             h += 1
-                    elif self.hora == 24: h = 0
-                    elif self.hora == self.hora_final: h = self.hora_inicio
                     display(h)
         else: return 'Isto não é uma lista'
