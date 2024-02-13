@@ -1,5 +1,5 @@
 # AuthWA
-![create by icons8](assets/robot.png){width='100' .center}
+<img src = 'docs/assets/robot.png' width='100'/>
 
 ## Banco de Dados Permitidos!
 ![MicrosoftSQLServer](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)
@@ -35,18 +35,16 @@ Após criar abra o terminal(PowerShell) ou CMD.
 
 Terminal
 
-![Terminal](image-4.png)
+![Terminal](docs/image-4.png)
 
 Agora abra o WhatsApp faça o seguinte atalho *ALT + TAB*,
 Para voltar ao terminal !
 
 Para que seu codigo funcione é importante que deixe o whatsapp aberto, pois o codigo irá usar o atalho *Alt + Tab* para acessa-lo. 
 
-![alt text](image.png)
+![alt text](docs/image.png)
 
 É importante também que __não movimente ou clique com o mouse e nem pressione nenhuma tecla__ durante o processo, o indicado é ter uma maquina como servidor para que o codigo tenha mais eficiencia, mas não é obrigatório.
-
-<!-- ![MenCoffee](https://th.bing.com/th/id/OIG3.F5iVKGOiGwjchlga1ZcZ?w=1024&h=1024&rs=1&pid=ImgDetMain){width = '50', .center} -->
 
 <img src='https://th.bing.com/th/id/OIG3.F5iVKGOiGwjchlga1ZcZ?w=1024&h=1024&rs=1&pid=ImgDetMain' alt ='mencoffee' width=400/>
 
@@ -124,15 +122,15 @@ Para realizar uma conexão com o banco de dados, precisamos de alguns parametros
 
 SQLite
 
-![SQLITE](image-1.png)
+![SQLITE](docs/image-1.png)
 
 SQL Server
 
-![SQL SERVER](image-2.png)
+![SQL SERVER](docs/image-2.png)
 
 MySQL
 
-![MYSQL](image-3.png)
+![MYSQL](docs/image-3.png)
 
 Exemplo de código
 
@@ -202,7 +200,7 @@ Detalhe: A saida do print acima não será a imagem de fato e sim o caminho até
 
 **Imagem:**
 
-![DataFrame](img.png)
+![DataFrame](docs/img.png)
 
 ## Parcial
 ### O que é Parcial ???
@@ -350,7 +348,7 @@ Podemos ver abaixo,, que ele nos retorna o horario atual e quando a parcial sera
 
 *Lembrando que esse processo é automatico, então não se preocupe com isso!*
 
-![ExecutandoPrimeiroloop](image-5.png)
+![ExecutandoPrimeiroloop](docs/image-5.png)
 
 ### Parcial - Fim de Semana
 
@@ -486,6 +484,6 @@ Muito obrigado por ter lido esta documentação e por usar o AuthWA, caso queira
 <h1 style='text-align: center'><b>Pix:</b></h1>
 
 <div style='display:flex; justify-content: center;'>
-    <img src = pix.png width=200 style='border-radius: 20px'/>
+    <img src = docs/pix.png width=200 style='border-radius: 20px'/>
 </div>
 
