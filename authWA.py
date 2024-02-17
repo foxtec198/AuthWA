@@ -110,8 +110,8 @@ class Parcial:
                 fds = st('%a')
                 self.update()
                 for f in funcs:
-                    if self.hora == 24: h = 0
                     if self.hora > self.hora_final: h = self.hora_inicio
+                    if self.hora == 24: h = 0
                     if type(f) == dict:
                         sl(1)
                         he = st('%X')
