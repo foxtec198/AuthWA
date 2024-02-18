@@ -84,6 +84,8 @@ class Parcial:
 
     def update(self):
         self.hora = int(st('%H'))
+        if self.hora == 24:
+            self.hora = 0
         self.now = datetime.now()
         self.day = st('%d')
         self.month = st('%m')
@@ -94,11 +96,8 @@ class Parcial:
         alternated = 0
         
         if self.hora == 0: alternated = 0
-
         if self.hora_inicio == self.hora: alternated = self.hora_inicio
-
         if self.hora > self.hora_inicio: alternated = self.hora + 1
-
         if self.hora < self.hora_inicio: alternated = self.hora_inicio
 
         return alternated
@@ -109,9 +108,9 @@ class Parcial:
             while True:
                 fds = st('%a')
                 self.update()
+                if h == 24: h = 0
                 for f in funcs:
                     if self.hora > self.hora_final: h = self.hora_inicio
-                    if self.hora == 24: h = 0
                     if type(f) == dict:
                         sl(1)
                         he = st('%X')
