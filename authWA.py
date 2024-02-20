@@ -135,3 +135,16 @@ class Parcial:
                         atalho('alt','tab')
                     display(h)
         else: return 'Isto não é uma lista'
+
+if __name__ == '__main__':
+    p = Parcial('guilherme.breve', '8458GUilherme', '10.56.6.56')
+    master = [(
+        lambda: p.whats.enviar_msg(
+            'Guilherme',
+            'Teste',
+            p.whats.criar_imagem_SQL(
+                'select top 1 Nome, TerminoReal from Tarefa'
+            )
+        )
+    )]
+    p.main_loop(master)
