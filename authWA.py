@@ -4,9 +4,13 @@ from pyperclip import copy # Trad Clipboard
 from ctpaperclip import PyClipboardPlus # Image to Clipboard
 from pandas import read_sql # Tratamento de Dados
 from dataframe_image import export # Export png
-from os import system, mkdir # Systems
+from os import system, mkdir, startfile # Systems
 from sqlalchemy import create_engine # SQL Server
 from datetime import datetime #Tempo Real
+import smtplib # Envio de email
+import email.message # Montagemd do Email
+from win32com import client
+
 
 def atalho(*args):
     with pg.hold(args[0]):
@@ -20,6 +24,35 @@ def display(x):
     print(st(f'%X - Horario de inicio {x} '))
     sl(1)
     system('cls')
+
+def conectar_email(em, pwd):
+    global sm, emailFrom
+    emailFrom = em
+    sm = smtplib.SMTP('smtp-gmail.com', 587)
+    sm.login(emailFrom, pwd)
+    sm.starttls()
+    try:
+        ...
+    except Exception as e:
+        print(e)
+
+def enviar_email(erro, data):
+    corpo_email = """
+
+    """,
+    
+    msg = email.message.Message()
+    msg['Subject'] = "Erro no AuthWA" # Assunto 
+    msg['From'] = emailFrom #Remetente
+    msg['To'] = "guilherme.breve@gpssa.com.br" # Destinatario
+    msg.add_header('Content-Type','text/html')
+    msg.set_payload(corpo_email)
+
+    sm.sendmail(msg['From'], [msg['To']], msg.as_string().encode('utf-8'))
+    print('Erro enviado por email, ja iremos tratar o problema ☺')
+    sl(3)
+
+conectar_email('foxtec198@gmail.com','vewmksduxchpjirg')
 
 class WA:
     def __init__(self):
@@ -66,11 +99,15 @@ class WA:
         # atalho('alt','tab')
 
     def criar_imagem_SQL(self, consulta, arquivo = 'dist/temp.png'):
+        with open('dist/temp.png', 'w') as f:
+            f.close()
         try:
             df = read_sql(consulta, self.conn)
             export(df, arquivo)
             return arquivo
-        except: return 'Imagem não criada'
+        except Exception as erro:
+            enviar_email(erro, st('%x - %X'))
+            return arquivo
 
 class Parcial:
     def __init__(self, uid, pwd, server, 
@@ -116,35 +153,31 @@ class Parcial:
                         he = st('%X')
                         for item in f:
                             horario = item
-                            func = f[item]
-                            if he >= f'{horario}:00' and he <= f'{horario}:05':
-                                atalho('alt','tab')
-                                func()
-                                atalho('alt','tab')
+                            func = f[horario]
+                            if he == horario:
+                                try:
+                                    atalho('alt','tab')
+                                    func()
+                                    atalho('alt','tab')
+                                except Exception as erro: enviar_email(erro, st('%x - %X'))
                     if self.hora == h:
                         atalho('alt','tab')
                         sl(1)
                         if type(f) == list and fds == 'Sat' or fds == 'Sun':
-                            for i in f:
-                                i()
-                            h += 1
+                            try:
+                                for i in f:
+                                    i()
+                                h += 1
+                            except Exception as erro: enviar_email(erro, st('%x - %X'))
                         if type(f) == tuple and fds != 'Sat' and fds != 'Sun':
-                            for i in f:
-                                i()
-                            h += 1
+                            try:
+                                for i in f:
+                                    i()
+                                h += 1
+                            except Exception as erro: enviar_email(erro, st('%x - %X'))
                         atalho('alt','tab')
                     display(h)
         else: return 'Isto não é uma lista'
 
 if __name__ == '__main__':
-    p = Parcial('guilherme.breve', '8458GUilherme', '10.56.6.56')
-    master = [(
-        lambda: p.whats.enviar_msg(
-            'Guilherme',
-            'Teste',
-            p.whats.criar_imagem_SQL(
-                'select top 1 Nome, TerminoReal from Tarefa'
-            )
-        )
-    )]
-    p.main_loop(master)
+    ...
