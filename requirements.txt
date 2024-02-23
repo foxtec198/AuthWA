@@ -5,5 +5,6 @@ ctpaperclip
 pandas
 dataframe_image
 sqlalchemy
+webbrowser
 
 
