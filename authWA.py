@@ -11,11 +11,11 @@ import smtplib # Envio de email
 import email.message # Montagemd do Email
 import logging # Logs
 
-pg.PAUSE = 1
+pg.PAUSE = .5
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
-logging.basicConfig(filename='logs/error_logs.log', filemode='a', level=logging.WARNING, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
+logging.basicConfig(filename='logs/error_logs.log', filemode='a', level=logging.ERROR, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
 logger = logging.getLogger('root')
 
 def atalho(*args):
@@ -33,7 +33,7 @@ def cola(txt: str):
 
 def display(x):
     print(st(f'%X - Horario de inicio {x} '))
-    sl(1)
+    # sl(1)
     system('cls')
 
 def conectar_email(em, pwd):
@@ -193,7 +193,8 @@ class Parcial:
         self.update()
         alternated = 0
         
-        if self.hora == 0: alternated = 0
+        if self.hora == 0: alternated = 1
+        if self.hora == 23: alternated = 0
         if self.hora_inicio == self.hora: alternated = self.hora_inicio
         if self.hora < self.hora_inicio: alternated = self.hora_inicio
         if self.hora > self.hora_inicio: alternated = self.hora + 1
@@ -206,10 +207,9 @@ class Parcial:
         if type(funcs) == list: 
             while True:
                 self.update()
-                if h == 24: h = 0
                 for f in funcs:
                     if type(f) == dict:
-                        he = st('%X')
+                        he = st('%X') # Horario completo - HH:MM:SS
                         for item in f:
                             horario = item
                             func = f[horario]
@@ -243,6 +243,7 @@ class Parcial:
                                 enviar_email(str(erro), st('%x - %X'))
                                 continue
                     display(h)
-        else: return 'Isto não é uma lista'
+        else:
+            return 'Isto não é uma lista'
 
 conectar_email('foxtec198@gmail.com','vewmksduxchpjirg')
