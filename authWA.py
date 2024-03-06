@@ -190,6 +190,7 @@ class Parcial:
         if self.hora == 24: self.hora = 0
 
     def definir_inicio(self):
+        self.update()
         alternated = 0
         
         if self.hora == 0: alternated = 1
