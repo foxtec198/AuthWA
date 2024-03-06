@@ -33,7 +33,7 @@ def cola(txt: str):
 
 def display(x):
     print(st(f'%X - Horario de inicio {x} '))
-    # sl(1)
+    sl(.5)
     system('cls')
 
 def conectar_email(em, pwd):
