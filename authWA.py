@@ -21,6 +21,7 @@ logger = logging.getLogger('root')
 def atalho(*args):
     with pg.hold(args[0]):
         pg.press(args[1])
+    sl(1)
 
 def atalho2(*args):
     with pg.hold(args[0]):
@@ -180,17 +181,15 @@ class Parcial:
         self.whats.sql_connection(uid, pwd, server)
 
     def update(self):
-        self.hora = int(st('%H'))
-        if self.hora == 24:
-            self.hora = 0
         self.now = datetime.now()
+        self.hora = int(st('%H'))
         self.day = st('%d')
         self.month = st('%m')
         self.year = st('%Y')
         self.fds = st('%a')
+        if self.hora == 24: self.hora = 0
 
     def definir_inicio(self):
-        self.update()
         alternated = 0
         
         if self.hora == 0: alternated = 1
@@ -206,44 +205,39 @@ class Parcial:
         print(st(f'%X - Horario de inicio {h} '))
         if type(funcs) == list: 
             while True:
-                self.update()
-                for f in funcs:
-                    if type(f) == dict:
-                        he = st('%X') # Horario completo - HH:MM:SS
-                        for item in f:
-                            horario = item
-                            func = f[horario]
-                            if he == horario:
-                                try:
-                                    atalho('alt','tab')
-                                    func()
-                                    atalho('alt','tab')
-                                except Exception as erro: 
-                                    enviar_email(str(erro), st('%x - %X'))
-                                    continue
-                    if self.hora == h:
-                        if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
-                            try:
-                                atalho('alt','tab')
-                                for i in f:
-                                    i()
-                                h += 1
-                                atalho('alt','tab')
-                            except Exception as erro:
-                                enviar_email(str(erro), st('%x - %X'))
-                                continue
-                        if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
-                            try:
-                                atalho('alt','tab')
-                                for i in f:
-                                    i()
-                                h += 1
-                                atalho('alt','tab')
-                            except Exception as erro: 
-                                enviar_email(str(erro), st('%x - %X'))
-                                continue
-                    display(h)
-        else:
-            return 'Isto não é uma lista'
+                self.make(funcs)
+        else: 
+            return "Isto não é um lista"
 
-conectar_email('foxtec198@gmail.com','vewmksduxchpjirg')
+    def make(self, funcs):
+        self.update()
+        for f in funcs:
+            if type(f) == dict:
+                he = st('%X') # Horario completo - HH:MM:SS
+                for item in f:
+                    horario = item
+                    func = f[horario]
+                    if he == horario:
+                        try:
+                            atalho('alt','tab')
+                            func()
+                            atalho('alt','tab')
+                        except Exception as erro: enviar_email(str(erro), st('%x - %X'))
+            if self.hora == h:
+                if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
+                    try:
+                        atalho('alt','tab')
+                        for i in f:
+                            i()
+                        h += 1
+                        atalho('alt','tab')
+                    except Exception as erro: enviar_email(str(erro), st('%x - %X'))
+                if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
+                    try:
+                        atalho('alt','tab')
+                        for i in f:
+                            i()
+                        h += 1
+                        atalho('alt','tab')
+                    except Exception as erro: enviar_email(str(erro), st('%x - %X'))
+            display(h)
