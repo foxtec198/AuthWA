@@ -205,11 +205,11 @@ class Parcial:
         print(st(f'%X - Horario de inicio {h} '))
         if type(funcs) == list: 
             while True:
-                self.make(funcs)
+                self.make(funcs, h)
         else: 
             return "Isto não é um lista"
 
-    def make(self, funcs):
+    def make(self, funcs, h):
         self.update()
         for f in funcs:
             if type(f) == dict:
