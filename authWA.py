@@ -84,7 +84,8 @@ def enviar_erro(erro, data):
     print('Erro enviado por email, ja iremos tratar o problema ☺')
     sl(3)
 
-def enviar_email(erro, data):
+def enviar_email(erro):
+    data = st('%x - %X')
     try:
         enviar_erro(erro, data)
         logger.error(erro)
@@ -201,15 +202,14 @@ class Parcial:
         return alternated
     
     def main_loop(self, funcs: list):
-        h = self.definir_inicio()
-        print(st(f'%X - Horario de inicio {h} '))
         if type(funcs) == list: 
             while True:
-                self.make(funcs, h)
+                self.make(funcs)
         else: 
             return "Isto não é um lista"
 
-    def make(self, funcs, h):
+    def make(self, funcs):
+        h = self.definir_inicio()
         self.update()
         for f in funcs:
             if type(f) == dict:
@@ -222,22 +222,20 @@ class Parcial:
                             atalho('alt','tab')
                             func()
                             atalho('alt','tab')
-                        except Exception as erro: enviar_email(str(erro), st('%x - %X'))
+                        except Exception as erro: enviar_email(str(erro))
             if self.hora == h:
+                atalho('alt','tab')
                 if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
                     try:
-                        atalho('alt','tab')
                         for i in f:
                             i()
                         h += 1
-                        atalho('alt','tab')
-                    except Exception as erro: enviar_email(str(erro), st('%x - %X'))
+                    except Exception as erro: enviar_email(str(erro))
                 if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
                     try:
-                        atalho('alt','tab')
                         for i in f:
                             i()
                         h += 1
-                        atalho('alt','tab')
-                    except Exception as erro: enviar_email(str(erro), st('%x - %X'))
+                    except Exception as erro: enviar_email(str(erro))
+                atalho('alt','tab')
             display(h)
