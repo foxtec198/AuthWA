@@ -11,7 +11,7 @@ import smtplib # Envio de email
 import email.message # Montagemd do Email
 import logging # Logs
 
-pg.PAUSE = .5
+pg.PAUSE = 1
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
@@ -110,6 +110,7 @@ class WA:
         
     def enviar_msg(self, nome, mensagem, img = None):
         # Pesquisa a Conversa
+        sl(1)
         atalho('ctrl','f')
         sl(2)
         cola(nome)
@@ -172,11 +173,10 @@ class WA:
 
 class Parcial:
     def __init__(self, uid, pwd, server, 
-                 hora_inicio = 0, hora_final = 23,):
+                 hora_inicio = 1, hora_final = 23,):
 
         self.hora_inicio = hora_inicio
         self.hora_final = hora_final
-
         self.whats = WA()
         self.whats.sql_connection(uid, pwd, server)
 
@@ -201,40 +201,42 @@ class Parcial:
         return alternated
     
     def main_loop(self, funcs: list):
-        if type(funcs) == list: 
-            while True:
-                self.make(funcs)
-        else: 
-            return "Isto não é um lista"
-
-    def make(self, funcs):
         h = self.definir_inicio()
-        self.update()
-        for f in funcs:
-            if type(f) == dict:
-                he = st('%X') # Horario completo - HH:MM:SS
-                for item in f:
-                    horario = item
-                    func = f[horario]
-                    if he == horario:
-                        try:
-                            atalho('alt','tab')
-                            func()
-                            atalho('alt','tab')
-                        except Exception as erro: enviar_email(str(erro))
-            if self.hora == h:
-                atalho('alt','tab')
-                if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
-                    try:
-                        for i in f:
-                            i()
-                        h += 1
-                    except Exception as erro: enviar_email(str(erro))
-                if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
-                    try:
-                        for i in f:
-                            i()
-                        h += 1
-                    except Exception as erro: enviar_email(str(erro))
-                atalho('alt','tab')
-            display(h)
+        while True:
+            self.update()
+            if type(funcs) == list: 
+                for f in funcs:
+                    if type(f) == dict:
+                        he = st('%X') # Horario completo - HH:MM:SS
+                        for item in f:
+                            horario = item
+                            func = f[horario]
+                            if he == horario:
+                                atalho('alt','tab')
+                                try:
+                                    func()
+                                except Exception as erro: 
+                                    enviar_email(str(erro))
+                                atalho('alt','tab')
+                    if self.hora == h:
+                        atalho('alt','tab')
+                        if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
+                            try:
+                                for i in f:
+                                    i()
+                                h += 1
+                            except Exception as erro: 
+                                enviar_email(str(erro))
+                        if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
+                            try:
+                                for i in f:
+                                    i()
+                                h += 1
+                            except Exception as erro: 
+                                enviar_email(str(erro))
+                        atalho('alt','tab')
+                    display(h)
+            else:
+                return "Isto não é um lista"
+
+        
