@@ -167,9 +167,8 @@ class WA:
             export(df, arquivo)
             return arquivo
         except Exception as erro:
-            enviar_email(erro, st('%x - %X'))
+            enviar_email(st(erro))
             return arquivo
-        sl(3)
 
 class Parcial:
     def __init__(self, uid, pwd, server, 
