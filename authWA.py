@@ -15,7 +15,7 @@ pg.PAUSE = 1
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
-logging.basicConfig(filename='logs/error_logs.log', filemode='a', level=logging.ERROR, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
+logging.basicConfig(filename='logs/error_logs.log', filemode='w', level=logging.ERROR, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
 logger = logging.getLogger('root')
 
 def atalho(*args):
@@ -204,39 +204,42 @@ class Parcial:
         h = self.definir_inicio()
         while True:
             self.update()
-            if type(funcs) == list: 
-                for f in funcs:
-                    if type(f) == dict:
-                        he = st('%X') # Horario completo - HH:MM:SS
-                        for item in f:
-                            horario = item
-                            func = f[horario]
-                            if he == horario:
-                                atalho('alt','tab')
-                                try:
-                                    func()
-                                except Exception as erro: 
-                                    enviar_email(str(erro))
-                                atalho('alt','tab')
+            for f in funcs:
+                if type(f) == dict:
+                    he = st('%X') # Horario completo - HH:MM:SS
+                    for item in f:
+                        horario = item
+                        func = f[horario]
+                        if he == horario:
+                            atalho('alt','tab')
+                            try:
+                                func()
+                            except Exception as erro: 
+                                print(erro)
+                                enviar_email(str(erro))
+                            atalho('alt','tab')
+                if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
                     if self.hora == h:
-                        atalho('alt','tab')
-                        if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
-                            try:
-                                for i in f:
-                                    i()
-                                h += 1
-                            except Exception as erro: 
-                                enviar_email(str(erro))
-                        if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
-                            try:
-                                for i in f:
-                                    i()
-                                h += 1
-                            except Exception as erro: 
-                                enviar_email(str(erro))
-                        atalho('alt','tab')
-                    display(h)
-            else:
-                return "Isto não é um lista"
+                        try:
+                            atalho('alt','tab')
+                            for i in f:
+                                i()
+                            atalho('alt','tab')
+                            h += 1
+                        except Exception as erro: 
+                            print(erro)
+                            enviar_email(str(erro))
 
-        
+                if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
+                    if self.hora == h:
+                        try:
+                            atalho('alt','tab')
+                            for i in f:
+                                i()
+                            atalho('alt','tab')
+                            h += 1
+                        except Exception as erro: 
+                            print(erro)
+                            enviar_email(str(erro))
+                if self.hora == self.hora_final: h = self.hora_inicio
+            # display(h)
