@@ -11,7 +11,7 @@ import smtplib # Envio de email
 import email.message # Montagemd do Email
 import logging # Logs
 
-pg.PAUSE = 1
+pg.PAUSE = .3
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
@@ -37,6 +37,11 @@ def display(x):
     sl(.5)
     system('cls')
 
+def dsp(x):
+    print(st(f'Horario de inicio {x} - %x'))
+    sl(.5)
+    system('cls')
+    
 def conectar_email(em, pwd):
     global sm, emailFrom
     emailFrom = em
@@ -217,29 +222,33 @@ class Parcial:
                             except Exception as erro: 
                                 print(erro)
                                 enviar_email(str(erro))
+                                break
                             atalho('alt','tab')
-                if type(f) == list and self.fds == 'Sat' or self.fds == 'Sun':
-                    if self.hora == h:
-                        try:
-                            atalho('alt','tab')
-                            for i in f:
-                                i()
-                            atalho('alt','tab')
-                            h += 1
-                        except Exception as erro: 
-                            print(erro)
-                            enviar_email(str(erro))
-
-                if type(f) == tuple and self.fds != 'Sat' and self.fds != 'Sun':
-                    if self.hora == h:
-                        try:
-                            atalho('alt','tab')
-                            for i in f:
-                                i()
-                            atalho('alt','tab')
-                            h += 1
-                        except Exception as erro: 
-                            print(erro)
-                            enviar_email(str(erro))
+                if type(f) == list:
+                    if self.fds == 'Sat' or self.fds == 'Sun':
+                        if self.hora == h:
+                            try:
+                                atalho('alt','tab')
+                                for i in f:
+                                    i()
+                                atalho('alt','tab')
+                                h += 1
+                            except Exception as erro: 
+                                print(erro)
+                                enviar_email(str(erro))
+                            break
+                if type(f) == tuple:
+                    if self.fds != 'Sat' and self.fds != 'Sun':
+                        if self.hora == h:
+                            try:
+                                atalho('alt','tab')
+                                for i in f:
+                                    i()
+                                atalho('alt','tab')
+                                h += 1
+                            except Exception as erro: 
+                                print(erro)
+                                enviar_email(str(erro))
+                                break
                 if self.hora == self.hora_final: h = self.hora_inicio
-            # display(h)
+            dsp(h)
