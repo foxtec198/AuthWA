@@ -70,8 +70,8 @@ def enviar_erro(erro, data):
             <img src="https://avatars.githubusercontent.com/u/64221923?v=4" alt="foto" style="border-radius: 50%; width: 200px;"/>
             <dib style="font-family: 'Courier New', Courier, monospace; margin-left: 30px; margin-top: 30px;">
                 <p style="margin-bottom: -10;">Att</p>
-                <p style="margin-bottom: -10;">Guilherme Breve</p>
-                <p style="margin-bottom: -10;">Analista de Projetos</p>
+                <p style="margin-bottom: -10;">Guilherme Breve</p><br>
+                <p style="margin-bottom: -10;">Analista de Projetos</p><br>
                 <p style="color: gray; margin-bottom: -10;"><i>+55 439966617904</i></p>
             </dib>
         </div>
@@ -173,7 +173,7 @@ class WA:
             export(df, arquivo)
             return arquivo
         except Exception as erro:
-            enviar_email(st(erro))
+            enviar_email(erro)
             return arquivo
 
 class Parcial:
