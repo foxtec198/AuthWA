@@ -174,7 +174,7 @@ class WA:
             return arquivo
         except Exception as erro:
             enviar_email(erro)
-            return arquivo
+            return None
 
 class Parcial:
     def __init__(self, uid, pwd, server, 
@@ -216,14 +216,14 @@ class Parcial:
                         horario = item
                         func = f[horario]
                         if he == horario:
-                            atalho('alt','tab')
                             try:
+                                atalho('alt','tab')
                                 func()
+                                atalho('alt','tab')
                             except Exception as erro: 
                                 print(erro)
                                 enviar_email(str(erro))
                                 break
-                            atalho('alt','tab')
                 if type(f) == list:
                     if self.fds == 'Sat' or self.fds == 'Sun':
                         if self.hora == h:
