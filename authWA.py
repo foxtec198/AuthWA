@@ -11,7 +11,7 @@ import smtplib # Envio de email
 import email.message # Montagemd do Email
 import logging # Logs
 
-pg.PAUSE = .3
+pg.PAUSE = .5
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
@@ -32,13 +32,8 @@ def cola(txt: str):
     copy(txt)
     atalho('ctrl','v')
 
-def display(x):
-    print(st(f'%X - Horario de inicio {x} '))
-    sl(.5)
-    system('cls')
-
-def dsp(x):
-    print(st(f'Horario de inicio {x} - %x'))
+def dsp(x, status_db):
+    print(st(f'Horario de inicio {x} - %x - %X - {status_db}'))
     sl(.5)
     system('cls')
     
@@ -49,9 +44,8 @@ def conectar_email(em, pwd):
     sm.starttls()
     try:
         sm.login(emailFrom, pwd)
-        ...
     except Exception as e:
-        print(e)
+        logger.error(e)
 
 def enviar_erro(erro, data):
     corpo_email = f"""
@@ -87,7 +81,6 @@ def enviar_erro(erro, data):
 
     sm.sendmail(msg['From'], [msg['To']], msg.as_string().encode('utf-8'))
     print('Erro enviado por email, ja iremos tratar o problema ☺')
-    sl(3)
 
 def enviar_email(erro):
     data = st('%x - %X')
@@ -103,19 +96,16 @@ class WA:
         except: ...
         self.pc = PyClipboardPlus()
 
-    def sql_connection(self, uid, pwd, server, 
-            database = 'Vista_Replication_PRD', 
-            driver = 'SQL Server'):
-            
+    def sql_connection(self, uid, pwd, server, database = 'Vista_Replication_PRD', driver = 'SQL Server'):
         self.engine = create_engine(f'mssql://{uid}:{pwd}@{server}/{database}?driver={driver}')
         try:
             self.conn = self.engine.connect()
-            return 'Conexão realizada com sucesso'
+            return 'Conexão ativa'
         except: return "Conexão Invalida"
         
     def enviar_msg(self, nome, mensagem, img = None):
         # Pesquisa a Conversa
-        sl(1)
+        sl(3)
         atalho('ctrl','f')
         sl(2)
         cola(nome)
@@ -142,6 +132,39 @@ class WA:
         pg.press('backspace')
         # atalho('alt','tab')
 
+    def enviar_msg_old(self, nome, mensagem, img = None):
+        # Pesquisa a Conversa
+        sl(3)
+        atalho('ctrl','f')
+        sl(2)
+        cola(nome)
+        sl(2)
+        # Entra na conversa
+        atalho('ctrl','1')
+        sl(7)
+
+        if img: # Caso tenha Imagem
+            system(f'explorer {img}')
+            sl(5)
+            atalho('ctrl','c')
+            sl(5)
+            atalho('ctrl','w')
+            sl(5)
+            atalho('ctrl','v')
+            sl(5)
+            cola(mensagem)
+            sl(1)
+            pg.press('enter')
+            pg.press('esc')
+        else: # Caso não tenha Imagem
+            cola(mensagem)
+            pg.press('enter')
+            pg.press('esc')
+
+        atalho('ctrl','f')
+        atalho('ctrl','a')
+        pg.press('backspace')
+
     def enviar_msg_web(self, nome, mensagem, img = None):
         # Pesquisa a Conversa
         atalho2('ctrl','alt','k')
@@ -166,8 +189,6 @@ class WA:
             pg.press('esc')
 
     def criar_imagem_SQL(self, consulta, arquivo = 'dist/temp.png'):
-        with open(arquivo, 'w') as f:
-            f.close()
         try:
             df = read_sql(consulta, self.conn)
             export(df, arquivo)
@@ -177,13 +198,11 @@ class WA:
             return None
 
 class Parcial:
-    def __init__(self, uid, pwd, server, 
-                 hora_inicio = 1, hora_final = 23,):
-
+    def __init__(self, uid, pwd, server, hora_inicio = 0, hora_final = 23,):
         self.hora_inicio = hora_inicio
         self.hora_final = hora_final
         self.whats = WA()
-        self.whats.sql_connection(uid, pwd, server)
+        self.cn = self.whats.sql_connection(uid, pwd, server)
 
     def update(self):
         self.now = datetime.now()
@@ -251,4 +270,4 @@ class Parcial:
                                 enviar_email(str(erro))
                                 break
                 if self.hora == self.hora_final: h = self.hora_inicio
-            dsp(h)
+            dsp(h, self.cn)
