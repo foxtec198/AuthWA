@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "authwa"
-version = "0.3.33"
+version = "0.3.41"
 description = "Automações WhatsApp"
 authors = ["Guilherme Breve <64221923+foxtec198@users.noreply.github.com>"]
 readme = "README.md"

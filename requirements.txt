@@ -4,7 +4,7 @@ pyperclip
 ctpaperclip
 pandas
 dataframe_image
-sqlalchemy
+pyodbc
 webbrowser
 
 

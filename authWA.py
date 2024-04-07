@@ -6,6 +6,7 @@ from pandas import read_sql # Tratamento de Dados
 from dataframe_image import export # Export png
 from os import system, mkdir # Systems
 from sqlalchemy import create_engine # SQL Server
+from urllib.parse import quote_plus 
 from datetime import datetime #Tempo Real
 import smtplib # Envio de email
 import email.message # Montagemd do Email
@@ -96,12 +97,19 @@ class WA:
         except: ...
         self.pc = PyClipboardPlus()
 
-    def sql_connection(self, uid, pwd, server, database = 'Vista_Replication_PRD', driver = 'SQL Server'):
-        self.engine = create_engine(f'mssql://{uid}:{pwd}@{server}/{database}?driver={driver}')
+    def sql_connection(self, uid, pwd, server, database = 'Vista_Replication_PRD'):
+        uid = quote_plus(uid)
+        pwd = quote_plus(pwd)
+        server = quote_plus(server)
+        database = quote_plus(database)
+        driver = quote_plus('ODBC Driver 18 for SQL Server')
+        self.engine = create_engine(f"mssql+pyodbc://{uid}:{pwd}@{server}/{database}?driver={driver}&TrustServerCertificate=yes")
         try:
             self.conn = self.engine.connect()
             return 'Conexão ativa'
-        except: return "Conexão Invalida"
+        except Exception as error:
+            enviar_email(error)
+            return f"Conexão Invalida \n\n {str(error)}"
         
     def enviar_msg(self, nome, mensagem, img = None):
         # Pesquisa a Conversa
