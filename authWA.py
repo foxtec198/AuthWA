@@ -86,24 +86,25 @@ def enviar_erro(erro, data):
 def enviar_email(erro):
     data = st('%x - %X')
     try:
-        enviar_erro(erro, data)
+        enviar_erro(str(erro), data)
         logger.error(erro)
     except:
         logger.error(erro)
 
 class WA:
     def __init__(self):
+        self.pc = PyClipboardPlus()
         try: mkdir('dist/')
         except: ...
-        self.pc = PyClipboardPlus()
 
     def sql_connection(self, uid, pwd, server, database = 'Vista_Replication_PRD'):
         uid = quote_plus(uid)
         pwd = quote_plus(pwd)
         server = quote_plus(server)
         database = quote_plus(database)
-        driver = quote_plus('ODBC Driver 18 for SQL Server')
+        driver = quote_plus('ODBC Driver 17 for SQL Server')
         self.engine = create_engine(f"mssql+pyodbc://{uid}:{pwd}@{server}/{database}?driver={driver}&TrustServerCertificate=yes")
+        print(self.engine)
         try:
             self.conn = self.engine.connect()
             return 'Conexão ativa'
@@ -279,3 +280,18 @@ class Parcial:
                                 break
                 if self.hora == self.hora_final: h = self.hora_inicio
             dsp(h, self.cn)
+
+if __name__ == '__main__':
+    p = Parcial(
+        'guilherme.breve','84584608@Gui','10.56.6.56', 8, 23
+    )
+    dds = [
+        lambda: p.whats.enviar_msg(
+            'Guilherme','Teste',p.whats.criar_imagem_SQL(
+                'SELECT TOP 1 Id, Nome FROM Tarefa'
+            )
+        )
+    ]
+    main = []
+    main.append (dds)
+    p.main_loop(main)

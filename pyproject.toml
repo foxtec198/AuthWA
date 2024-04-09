@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "authwa"
-version = "0.3.41"
+version = "0.3.46"
 description = "Automações WhatsApp"
 authors = ["Guilherme Breve <64221923+foxtec198@users.noreply.github.com>"]
 readme = "README.md"
@@ -33,3 +33,7 @@ mkdocs-material = "^9.5.9"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[pypi]
+username = "__token__"
+password = "pypi-AgEIcHlwaS5vcmcCJDkwNGZmZWUwLWRmMjktNDBkMC1iNzZiLThjMWNhZmJiYTVmNgACDlsxLFsiYXV0aHdhIl1dAAIsWzIsWyI0MDAyNzI3Yi0wMWJiLTQ5MTAtYjdlNy00YzRiNzg5N2QzZjkiXV0AAAYg_LwlBtMdZJwAYsC-PQZi5jIANfsZGlvRVezPD-1cNPw"
