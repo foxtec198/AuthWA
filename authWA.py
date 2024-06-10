@@ -2,7 +2,7 @@ from time import sleep as sl, strftime as st # Time
 import pyautogui as pg # Automate
 from pyperclip import copy # Trad Clipboard
 from ctpaperclip import PyClipboardPlus # Image to Clipboard
-from pandas import read_sql # Tratamento de Dados
+from pandas import read_sql, read_sql_query # Tratamento de Dados
 from dataframe_image import export # Export png
 from os import system, mkdir # Systems
 from sqlalchemy import create_engine # SQL Server
@@ -11,12 +11,13 @@ from datetime import datetime #Tempo Real
 import smtplib # Envio de email
 import email.message # Montagemd do Email
 import logging # Logs
+from PIL import Image # Pillage
 
 pg.PAUSE = .5
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
-logging.basicConfig(filename='logs/error_logs.log', filemode='w', level=logging.ERROR, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
+logging.basicConfig(filename='logs/error_logs.log', filemode='a', level=logging.ERROR, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
 logger = logging.getLogger('root')
 
 def atalho(*args):
@@ -33,9 +34,9 @@ def cola(txt: str):
     copy(txt)
     atalho('ctrl','v')
 
-def dsp(x, status_db):
-    print(st(f'Horario de inicio {x} - %x - %X - {status_db}'))
-    sl(.5)
+def dsp(x):
+    print(st(f'Horario de inicio {x} - %x - %X'))
+    sl(1)
     system('cls')
     
 def conectar_email(em, pwd):
@@ -47,6 +48,7 @@ def conectar_email(em, pwd):
         sm.login(emailFrom, pwd)
     except Exception as e:
         logger.error(e)
+        print(f'Erro de Login - Email: {e}')
 
 def enviar_erro(erro, data):
     corpo_email = f"""
@@ -88,8 +90,9 @@ def enviar_email(erro):
     try:
         enviar_erro(str(erro), data)
         logger.error(erro)
-    except:
+    except Exception as e:
         logger.error(erro)
+        print(f'Erro ao enviar email: {e}')
 
 class WA:
     def __init__(self):
@@ -97,21 +100,21 @@ class WA:
         try: mkdir('dist/')
         except: ...
 
-    def sql_connection(self, uid, pwd, server, database = 'Vista_Replication_PRD'):
-        uid = quote_plus(uid)
-        pwd = quote_plus(pwd)
-        server = quote_plus(server)
-        database = quote_plus(database)
-        driver = quote_plus('ODBC Driver 17 for SQL Server')
-        self.engine = create_engine(f"mssql+pyodbc://{uid}:{pwd}@{server}/{database}?driver={driver}&TrustServerCertificate=yes")
-        print(self.engine)
+    def sql_connection(self, uid, pwd, server, database='Vista_Replication_PRD', driver='ODBC Driver 18 for SQL Server'):
+        self.uid = quote_plus(uid)
+        self.pwd = quote_plus(pwd)
+        self.server = quote_plus(server)
+        self.database = quote_plus(database)
+        driver = quote_plus(driver)
+        url = f'mssql://{self.uid}:{self.pwd}@{self.server}/{self.database}?driver={driver}&&TrustServerCertificate=yes'
         try:
-            self.conn = self.engine.connect()
-            return 'Conexão ativa'
+            engine = create_engine(url)
+            self.connSQl = engine
+            print('Conectado!')
+            return engine
         except Exception as error:
-            enviar_email(error)
-            return f"Conexão Invalida \n\n {str(error)}"
-        
+            return error
+
     def enviar_msg(self, nome, mensagem, img = None):
         # Pesquisa a Conversa
         sl(3)
@@ -198,23 +201,38 @@ class WA:
             pg.press('esc')
 
     def criar_imagem_SQL(self, consulta, arquivo = 'dist/temp.png'):
-        try:
-            df = read_sql(consulta, self.conn)
-            export(df, arquivo)
-            return arquivo
-        except Exception as erro:
-            enviar_email(erro)
-            return None
+        df = read_sql_query(consulta, self.connSQl)
+        export(df, filename=arquivo, max_cols=-1, max_rows=-1)
+        return arquivo
 
+    def criar_imagem_SQL_GGPS(self, consulta, arquivo = 'dist/temp.png'):
+        df = read_sql_query(consulta, self.connSQl)
+        export(df, filename=arquivo, max_cols=-1, max_rows=-1)
+        dt = Image.open(arquivo)
+        logo = Image.open('GPS.png')
+        hm = dt.size[1] + logo.size[1] 
+        wm = dt.size[0]
+        modelo = Image.new('RGBA', (wm, hm), color='#DFDFDF')
+        mid = int(modelo.width/2) - int(logo.width/2)
+        modelo.paste(logo, (mid, 0), logo)
+        modelo.paste(dt, (0, logo.height + 1))
+        modelo.save(arquivo)
+        return arquivo
+    
 class Parcial:
-    def __init__(self, uid, pwd, server, hora_inicio = 0, hora_final = 23,):
+    def __init__(self, uid, pwd, server, db, hora_inicio = 0, hora_final = 23,):
         self.hora_inicio = hora_inicio
         self.hora_final = hora_final
         self.whats = WA()
-        self.cn = self.whats.sql_connection(uid, pwd, server)
+        self.uid = uid
+        self.pwd = pwd
+        self.server = server
+        self.engine = self.whats.sql_connection(uid, pwd, server, db)
 
     def update(self):
         self.now = datetime.now()
+        self.date = datetime.date(datetime.today())
+        self.time = datetime.time(datetime.today())
         self.hora = int(st('%H'))
         self.day = st('%d')
         self.month = st('%m')
@@ -249,49 +267,33 @@ class Parcial:
                                 func()
                                 atalho('alt','tab')
                             except Exception as erro: 
-                                print(erro)
                                 enviar_email(str(erro))
-                                break
+                                print(f'Erro de função DICT: {erro}')
                 if type(f) == list:
                     if self.fds == 'Sat' or self.fds == 'Sun':
                         if self.hora == h:
                             try:
                                 atalho('alt','tab')
-                                for i in f:
-                                    i()
+                                for i in f: i()
                                 atalho('alt','tab')
                                 h += 1
                             except Exception as erro: 
-                                print(erro)
+                                import sys
                                 enviar_email(str(erro))
-                            break
+                                print(f'Erro de função FDS: {erro}')
+                                sys.exit()
                 if type(f) == tuple:
                     if self.fds != 'Sat' and self.fds != 'Sun':
                         if self.hora == h:
-                            try:
-                                atalho('alt','tab')
-                                for i in f:
-                                    i()
-                                atalho('alt','tab')
-                                h += 1
-                            except Exception as erro: 
-                                print(erro)
-                                enviar_email(str(erro))
-                                break
+                            # try:
+                            atalho('alt','tab')
+                            for i in f: i()
+                            atalho('alt','tab')
+                            h += 1
+                            # except Exception as erro: 
+                            #     import sys
+                            #     enviar_email(str(erro))
+                            #     print(f'Erro de função DDS: {erro}')
+                            #     sys.exit()
                 if self.hora == self.hora_final: h = self.hora_inicio
-            dsp(h, self.cn)
-
-if __name__ == '__main__':
-    p = Parcial(
-        'guilherme.breve','84584608@Gui','10.56.6.56', 8, 23
-    )
-    dds = [
-        lambda: p.whats.enviar_msg(
-            'Guilherme','Teste',p.whats.criar_imagem_SQL(
-                'SELECT TOP 1 Id, Nome FROM Tarefa'
-            )
-        )
-    ]
-    main = []
-    main.append (dds)
-    p.main_loop(main)
+            dsp(h)

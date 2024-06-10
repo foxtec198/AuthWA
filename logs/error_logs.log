@@ -1,2 +1,37 @@
-Horario do erro: 2024-04-08 18:01:41,879 - ERROR, Aqruivo: authWA.py, Mensagem:(pyodbc.OperationalError) ('08001', '[08001] [Microsoft][ODBC Driver 17 for SQL Server]Provedor de Pipes Nomeados: Não foi possível abrir uma conexão com o SQL Server [53].  (53) (SQLDriverConnect); [08001] [Microsoft][ODBC Driver 17 for SQL Server]O tempo limite do logon expirou (0); [08001] [Microsoft][ODBC Driver 17 for SQL Server]Erro relatado pela rede ou específico à instância ao estabelecer conexão com o SQL Server. O servidor não foi encontrado ou não está acessível. Verifique se o nome da instância está correto e se o SQL Server está configurado para permitir conexões remotas. Para obter mais informações, consulte os Manuais Online do SQL Server. (53)')
-(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Horario do erro: 2024-05-24 07:36:27,204 - ERROR, Aqruivo: authWA.py, Mensagem:String de Conexão: mssql://guilherme.breve:84584608-Gui@10.56.6.56/Vista_Replication_PRD?driver=ODBC+Driver+17+for+SQL+Server&&TrustServerCertificate=yes 
+ Erro: (pyodbc.OperationalError) ('08001', '[08001] [Microsoft][ODBC Driver 17 for SQL Server]Provedor de Pipes Nomeados: Não foi possível abrir uma conexão com o SQL Server [53].  (53) (SQLDriverConnect); [08001] [Microsoft][ODBC Driver 17 for SQL Server]O tempo limite do logon expirou (0); [08001] [Microsoft][ODBC Driver 17 for SQL Server]Erro relatado pela rede ou específico à instância ao estabelecer conexão com o SQL Server. O servidor não foi encontrado ou não está acessível. Verifique se o nome da instância está correto e se o SQL Server está configurado para permitir conexões remotas. Para obter mais informações, consulte os Manuais Online do SQL Server. (53)')
+(Background on this error at: https://sqlalche.me/e/14/e3q8)
+Horario do erro: 2024-05-24 08:00:22,965 - ERROR, Aqruivo: authWA.py, Mensagem:'str' object has no attribute 'convert'
+Horario do erro: 2024-05-24 09:00:22,886 - ERROR, Aqruivo: authWA.py, Mensagem:'str' object has no attribute 'convert'
+Horario do erro: 2024-05-24 09:00:22,986 - ERROR, Aqruivo: base.py, Mensagem:Exception during reset or similar
+Traceback (most recent call last):
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\mssql\base.py", line 2847, in do_rollback
+    super(MSDialect, self).do_rollback(dbapi_connection)
+TypeError: super() argument 1 must be type, not None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\pool\base.py", line 763, in _finalize_fairy
+    fairy._reset(pool, transaction_was_reset)
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\pool\base.py", line 1038, in _reset
+    pool._dialect.do_rollback(self)
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\mssql\base.py", line 2848, in do_rollback
+    except self.dbapi.ProgrammingError as e:
+TypeError: catching classes that do not inherit from BaseException is not allowed
+Horario do erro: 2024-05-24 10:00:22,763 - ERROR, Aqruivo: base.py, Mensagem:Exception during reset or similar
+Traceback (most recent call last):
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\mssql\base.py", line 2847, in do_rollback
+    super(MSDialect, self).do_rollback(dbapi_connection)
+TypeError: super() argument 1 must be type, not None
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\pool\base.py", line 763, in _finalize_fairy
+    fairy._reset(pool, transaction_was_reset)
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\pool\base.py", line 1038, in _reset
+    pool._dialect.do_rollback(self)
+  File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\mssql\base.py", line 2848, in do_rollback
+    except self.dbapi.ProgrammingError as e:
+TypeError: catching classes that do not inherit from BaseException is not allowed
