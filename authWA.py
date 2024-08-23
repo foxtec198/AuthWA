@@ -206,7 +206,8 @@ class WA:
         return arquivo
 
     def criar_imagem_SQL_GGPS(self, consulta, arquivo = 'dist/temp.png'):
-        df = read_sql_query(consulta, self.connSQl)
+        conn = self.connSQl.connect()
+        df = read_sql_query(consulta, conn)
         export(df, filename=arquivo, max_cols=-1, max_rows=-1)
         dt = Image.open(arquivo)
         logo = Image.open('GPS.png')
@@ -227,10 +228,11 @@ class Parcial:
         self.uid = uid
         self.pwd = pwd
         self.server = server
+        self.db = db
         self.engine = self.whats.sql_connection(uid, pwd, server, db)
 
     def update(self):
-        self.now = datetime.now()
+        self.now = datetime.now().strftime('%d/%m/%Y %H:%M')
         self.date = datetime.date(datetime.today())
         self.time = datetime.time(datetime.today())
         self.hora = int(st('%H'))
