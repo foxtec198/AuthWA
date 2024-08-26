@@ -5,6 +5,5 @@ ctpaperclip
 pandas==2.1.4
 dataframe_image
 pyodbc
-webbrowser
-
-
+pyautogui
+sqlalchemy
