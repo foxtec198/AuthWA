@@ -208,7 +208,7 @@ class WA:
     def criar_imagem_SQL_GGPS(self, consulta, arquivo = 'dist/temp.png'):
         conn = self.connSQl.connect()
         df = read_sql_query(consulta, conn)
-        export(df, filename=arquivo, max_cols=-1, max_rows=-1)
+        export(df, filename=arquivo, max_cols=-1, max_rows=-1, table_convertion="selenium")
         dt = Image.open(arquivo)
         logo = Image.open('GPS.png')
         hm = dt.size[1] + logo.size[1] 
