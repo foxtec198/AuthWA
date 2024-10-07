@@ -97,6 +97,7 @@ def enviar_email(erro):
 class WA:
     def __init__(self):
         self.pc = PyClipboardPlus()
+        self.conn = None
         try: mkdir('dist/')
         except: ...
 
@@ -107,13 +108,8 @@ class WA:
         self.database = quote_plus(database)
         driver = quote_plus(driver)
         url = f'mssql://{self.uid}:{self.pwd}@{self.server}/{self.database}?driver={driver}&&TrustServerCertificate=yes'
-        try:
-            engine = create_engine(url)
-            self.connSQl = engine
-            print('Conectado!')
-            return engine
-        except Exception as error:
-            return error
+        engine = create_engine(url)
+        return engine
 
     def enviar_msg(self, nome, mensagem, img = None):
         # Pesquisa a Conversa
@@ -205,20 +201,22 @@ class WA:
         export(df, filename=arquivo, max_cols=-1, max_rows=-1)
         return arquivo
 
-    def criar_imagem_SQL_GGPS(self, consulta, arquivo = 'dist/temp.png'):
-        conn = self.connSQl.connect()
-        df = read_sql_query(consulta, conn)
-        export(df, filename=arquivo, max_cols=-1, max_rows=-1, table_conversion="selenium")
-        dt = Image.open(arquivo)
-        logo = Image.open('GPS.png')
-        hm = dt.size[1] + logo.size[1] 
-        wm = dt.size[0]
-        modelo = Image.new('RGBA', (wm, hm), color='#DFDFDF')
-        mid = int(modelo.width/2) - int(logo.width/2)
-        modelo.paste(logo, (mid, 0), logo)
-        modelo.paste(dt, (0, logo.height + 1))
-        modelo.save(arquivo)
-        return arquivo
+    def criar_imagem_SQL_GGPS(self, consulta, arquivo = 'dist/temp.png', escalonadas=None):
+        if self.conn:
+            df = read_sql_query(consulta, self.conn)
+            if not df.empty:
+                export(df, filename=arquivo, max_cols=-1, max_rows=-1, table_conversion="matplotlib")
+                dt = Image.open(arquivo)
+                logo = Image.open('src/GPS.png')
+                hm = dt.size[1] + logo.size[1] 
+                wm = dt.size[0]
+                modelo = Image.new('RGBA', (wm, hm), color='#DFDFDF')
+                mid = int(modelo.width/2) - int(logo.width/2)
+                modelo.paste(logo, (mid, 0), logo)
+                modelo.paste(dt, (0, logo.height + 1))
+                modelo.save(arquivo)
+                return arquivo
+            elif df.empty and escalonadas: return 'src/zeradas.png'
     
 class Parcial:
     def __init__(self, uid, pwd, server, db, hora_inicio = 0, hora_final = 23,):
@@ -228,8 +226,8 @@ class Parcial:
         self.uid = uid
         self.pwd = pwd
         self.server = server
+        self.engine = self.whats.sql_connection(uid, pwd, server)
         self.db = db
-        self.engine = self.whats.sql_connection(uid, pwd, server, db)
 
     def update(self):
         self.now = datetime.now().strftime('%d/%m/%Y %H:%M')
@@ -268,34 +266,50 @@ class Parcial:
                                 atalho('alt','tab')
                                 func()
                                 atalho('alt','tab')
-                            except Exception as erro: 
+                            except Exception as erro:
                                 enviar_email(str(erro))
-                                print(f'Erro de função DICT: {erro}')
+                                print(f'Erro: {erro}')
+                                exit()
                 if type(f) == list:
                     if self.fds == 'Sat' or self.fds == 'Sun':
                         if self.hora == h:
                             try:
-                                atalho('alt','tab')
-                                for i in f: i()
-                                atalho('alt','tab')
-                                h += 1
+                                with self.engine.connect() as conn:
+                                    self.whats.conn = conn
+                                    atalho('alt','tab')
+                                    for i in f: i()
+                                    atalho('alt','tab')
+                                    h += 1
                             except Exception as erro: 
-                                import sys
                                 enviar_email(str(erro))
-                                print(f'Erro de função FDS: {erro}')
-                                sys.exit()
+                                print(f'Erro: {erro}')
+                                exit()
                 if type(f) == tuple:
                     if self.fds != 'Sat' and self.fds != 'Sun':
                         if self.hora == h:
-                            # try:
-                            atalho('alt','tab')
-                            for i in f: i()
-                            atalho('alt','tab')
-                            h += 1
-                            # except Exception as erro: 
-                            #     import sys
-                            #     enviar_email(str(erro))
-                            #     print(f'Erro de função DDS: {erro}')
-                            #     sys.exit()
+                            try:
+                                with self.engine.connect() as conn:
+                                    self.whats.conn = conn
+                                    atalho('alt','tab')
+                                    for i in f: i()
+                                    atalho('alt','tab')
+                                    h += 1
+                            except Exception as erro: 
+                                enviar_email(str(erro))
+                                print(f'Erro: {erro}')
                 if self.hora == self.hora_final: h = self.hora_inicio
             dsp(h)
+
+if __name__ == '__main__':
+    p = Parcial('guilherme.breve','Gtaiv@130520','10.56.6.56','Vista_Replication_PRD')
+    dds = (
+        lambda: print('Inicio'),
+        lambda: p.whats.enviar_msg(
+            'Guilherme',
+            'Teste de Atualização',
+            p.whats.criar_imagem_SQL_GGPS('select top 1 nome from tarefa')
+        )
+    )
+    main = []
+    main.append(dds)
+    p.main_loop(main)
