@@ -75,6 +75,7 @@ def enviar_erro(erro, data):
     </body>
     """
     
+    conectar_email('foxtec198@gmail.com', 'fwmeylchtupgrmeb')
     msg = email.message.Message()
     msg['Subject'] = "Erro no AuthWA" # Assunto 
     msg['From'] = emailFrom #Remetente
@@ -204,19 +205,18 @@ class WA:
     def criar_imagem_SQL_GGPS(self, consulta, arquivo = 'dist/temp.png', escalonadas=None):
         if self.conn:
             df = read_sql_query(consulta, self.conn)
-            if not df.empty:
-                export(df, filename=arquivo, max_cols=-1, max_rows=-1, table_conversion="matplotlib")
-                dt = Image.open(arquivo)
-                logo = Image.open('src/GPS.png')
-                hm = dt.size[1] + logo.size[1] 
-                wm = dt.size[0]
-                modelo = Image.new('RGBA', (wm, hm), color='#DFDFDF')
-                mid = int(modelo.width/2) - int(logo.width/2)
-                modelo.paste(logo, (mid, 0), logo)
-                modelo.paste(dt, (0, logo.height + 1))
-                modelo.save(arquivo)
-                return arquivo
-            elif df.empty and escalonadas: return 'src/zeradas.png'
+            if df.empty and escalonadas: return 'src/zeradas.png'
+            export(df, filename=arquivo, max_cols=-1, max_rows=-1, table_conversion="matplotlib")
+            dt = Image.open(arquivo)
+            logo = Image.open('src/GPS.png')
+            hm = dt.size[1] + logo.size[1] 
+            wm = dt.size[0]
+            modelo = Image.new('RGBA', (wm, hm), color='#DFDFDF')
+            mid = int(modelo.width/2) - int(logo.width/2)
+            modelo.paste(logo, (mid, 0), logo)
+            modelo.paste(dt, (0, logo.height + 1))
+            modelo.save(arquivo)
+            return arquivo
     
 class Parcial:
     def __init__(self, uid, pwd, server, db, hora_inicio = 0, hora_final = 23,):
@@ -256,47 +256,28 @@ class Parcial:
         while True:
             self.update()
             for f in funcs:
-                if type(f) == dict:
-                    he = st('%X') # Horario completo - HH:MM:SS
-                    for item in f:
-                        horario = item
-                        func = f[horario]
-                        if he == horario:
-                            try:
-                                atalho('alt','tab')
-                                func()
-                                atalho('alt','tab')
-                            except Exception as erro:
-                                enviar_email(str(erro))
-                                print(f'Erro: {erro}')
-                                exit()
                 if type(f) == list:
                     if self.fds == 'Sat' or self.fds == 'Sun':
                         if self.hora == h:
                             try:
+                                atalho('alt','tab')
                                 with self.engine.connect() as conn:
                                     self.whats.conn = conn
-                                    atalho('alt','tab')
                                     for i in f: i()
-                                    atalho('alt','tab')
-                                    h += 1
-                            except Exception as erro: 
-                                enviar_email(str(erro))
-                                print(f'Erro: {erro}')
-                                exit()
+                                atalho('alt','tab')
+                                h += 1
+                            except Exception as erro: enviar_email(str(erro))
                 if type(f) == tuple:
                     if self.fds != 'Sat' and self.fds != 'Sun':
                         if self.hora == h:
                             try:
+                                atalho('alt','tab')
                                 with self.engine.connect() as conn:
                                     self.whats.conn = conn
-                                    atalho('alt','tab')
                                     for i in f: i()
-                                    atalho('alt','tab')
-                                    h += 1
-                            except Exception as erro: 
-                                enviar_email(str(erro))
-                                print(f'Erro: {erro}')
+                                atalho('alt','tab')
+                                h += 1
+                            except Exception as erro: enviar_email(str(erro))
                 if self.hora == self.hora_final: h = self.hora_inicio
             dsp(h)
 
