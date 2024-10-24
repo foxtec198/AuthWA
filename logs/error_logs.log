@@ -35,3 +35,10 @@ Traceback (most recent call last):
   File "c:\Users\Guilherme Breve\AppData\Local\Programs\Python\Python310\lib\site-packages\sqlalchemy\dialects\mssql\base.py", line 2848, in do_rollback
     except self.dbapi.ProgrammingError as e:
 TypeError: catching classes that do not inherit from BaseException is not allowed
+Horario do erro: 2024-10-18 03:00:22,834 - ERROR, Aqruivo: authWA.py, Mensagem:
+Horario do erro: 2024-10-18 03:00:46,707 - ERROR, Aqruivo: authWA.py, Mensagem:
+Horario do erro: 2024-10-18 03:00:22,886 - ERROR, Aqruivo: authWA.py, Mensagem:
+Horario do erro: 2024-10-18 03:00:46,513 - ERROR, Aqruivo: authWA.py, Mensagem:
+Horario do erro: 2024-10-18 04:00:23,230 - ERROR, Aqruivo: authWA.py, Mensagem:
+Horario do erro: 2024-10-18 04:00:46,685 - ERROR, Aqruivo: authWA.py, Mensagem:
+Horario do erro: 2024-10-18 04:01:09,671 - ERROR, Aqruivo: authWA.py, Mensagem:

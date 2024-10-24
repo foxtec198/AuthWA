@@ -2,7 +2,7 @@ from time import sleep as sl, strftime as st # Time
 import pyautogui as pg # Automate
 from pyperclip import copy # Trad Clipboard
 from ctpaperclip import PyClipboardPlus # Image to Clipboard
-from pandas import read_sql, read_sql_query # Tratamento de Dados
+from pandas import read_sql_query # Tratamento de Dados
 from dataframe_image import export # Export png
 from os import system, mkdir # Systems
 from sqlalchemy import create_engine # SQL Server
@@ -12,8 +12,14 @@ import smtplib # Envio de email
 import email.message # Montagemd do Email
 import logging # Logs
 from PIL import Image # Pillage
+from webbrowser import open_new_tab
 
-pg.PAUSE = .5
+# Lista de Drivers e DBS
+DBs = ['MSSQL','SQLITE','MySQL','PSSQL']
+MSSQL = ['ODBC Driver 18 for SQL Server',]
+
+
+pg.PAUSE = .8
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
@@ -23,12 +29,10 @@ logger = logging.getLogger('root')
 def atalho(*args):
     with pg.hold(args[0]):
         pg.press(args[1])
-    sl(1)
 
 def atalho2(*args):
-    with pg.hold(args[0]):
-        pg.press(args[1])
-        pg.press(args[3])
+    with pg.hold(args[0]) and pg.hold(args[1]):
+        pg.press(args[2])
 
 def cola(txt: str):
     copy(txt)
@@ -98,29 +102,38 @@ def enviar_email(erro):
 class WA:
     def __init__(self):
         self.pc = PyClipboardPlus()
-        self.conn = None
+        self.engine = None
+
         try: mkdir('dist/')
         except: ...
 
-    def sql_connection(self, uid, pwd, server, database='Vista_Replication_PRD', driver='ODBC Driver 18 for SQL Server'):
-        self.uid = quote_plus(uid)
-        self.pwd = quote_plus(pwd)
-        self.server = quote_plus(server)
-        self.database = quote_plus(database)
-        driver = quote_plus(driver)
-        url = f'mssql://{self.uid}:{self.pwd}@{self.server}/{self.database}?driver={driver}&&TrustServerCertificate=yes'
-        engine = create_engine(url)
-        return engine
+    def sql_connection(self, uid=None, pwd=None, server=None, database=None, bd=DBs[0]):
+        if uid: uid = quote_plus(uid)
+        if pwd: pwd = quote_plus(pwd)
+        if server: server = quote_plus(server)
+        if database: database = quote_plus(database)
 
-    def enviar_msg(self, nome, mensagem, img = None):
+        print(bd)
+        if bd == 'MSSQL': url = f'mssql://{uid}:{pwd}@{server}/{database}?driver={quote_plus(MSSQL[0])}&&TrustServerCertificate=yes'
+        if bd == 'PSSQL': url = f"postgresql+psycopg2://{uid}:{pwd}@{server}/{database}"
+        if bd == 'MySQL': url = f"mysql://{uid}:{pwd}@{server}/{database}"
+        if bd == 'SQLITE': url = f"sqlite:///{database}"
+        self.engine = create_engine(url)
+        return self.engine
+
+    def enviar_msg_nc(self, num, mensagem, img = None):
+        atalho('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        atalho('ctrl','f')
+        atalho('ctrl','n')
         sl(2)
-        cola(nome)
+        cola(num)
         sl(2)
-        # Entra na conversa
-        atalho('ctrl','1')
+        pg.press('tab')
+        sl(1)
+        pg.press('tab')
+        sl(1)
+        pg.press('enter')
         sl(7)
 
         if img: # Caso tenha Imagem
@@ -136,12 +149,10 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        atalho('ctrl','f')
-        atalho('ctrl','a')
-        pg.press('backspace')
-        # atalho('alt','tab')
+        atalho('alt','tab')
 
-    def enviar_msg_old(self, nome, mensagem, img = None):
+    def enviar_msg(self, nome, mensagem, img = None):
+        atalho('alt','tab')
         # Pesquisa a Conversa
         sl(3)
         atalho('ctrl','f')
@@ -153,14 +164,9 @@ class WA:
         sl(7)
 
         if img: # Caso tenha Imagem
-            system(f'explorer {img}')
-            sl(5)
-            atalho('ctrl','c')
-            sl(5)
-            atalho('ctrl','w')
-            sl(5)
+            self.pc.write_image_to_clipboard(img)
             atalho('ctrl','v')
-            sl(5)
+            sl(6)
             cola(mensagem)
             sl(1)
             pg.press('enter')
@@ -173,16 +179,55 @@ class WA:
         atalho('ctrl','f')
         atalho('ctrl','a')
         pg.press('backspace')
+        atalho('alt','tab')
+
+    def continuos_msg(self, nome, listMsg, img = None):
+        atalho('alt','tab')
+        # Pesquisa a Conversa
+        sl(3)
+        atalho('ctrl','f')
+        sl(2)
+        cola(nome)
+        sl(2)
+        # Entra na conversa
+        atalho('ctrl','1')
+        sl(7)
+
+        if img: # Caso tenha Imagem
+            for mensagem in listMsg:
+                self.pc.write_image_to_clipboard(img)
+                atalho('ctrl','v')
+                sl(5)
+                cola(mensagem)
+                sl(1)
+                pg.press('enter')
+            pg.press('esc')
+        else: # Caso não tenha Imagem
+            for mensagem in listMsg:
+                cola(mensagem)
+                sl(1)
+                pg.press('enter')
+            pg.press('esc')
+
+        atalho('ctrl','f')
+        atalho('ctrl','a')
+        pg.press('backspace')
+        atalho('alt','tab')
 
     def enviar_msg_web(self, nome, mensagem, img = None):
+        atalho('alt','tab')
         # Pesquisa a Conversa
-        atalho2('ctrl','alt','k')
+        sl(1)
+        atalho2('ctrl','alt','/')
+        atalho('ctrl','a')
         sl(2)
         cola(nome)
         sl(2)
         # Entra na conversa
         pg.press('enter')
         sl(5)
+        imglocal = pg.locateCenterOnScreen('image.png')
+        pg.click(imglocal[0]+200, imglocal[1])
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
@@ -196,15 +241,18 @@ class WA:
             cola(mensagem)
             pg.press('enter')
             pg.press('esc')
+        atalho('alt','tab')
 
     def criar_imagem_SQL(self, consulta, arquivo = 'dist/temp.png'):
-        df = read_sql_query(consulta, self.connSQl)
-        export(df, filename=arquivo, max_cols=-1, max_rows=-1)
-        return arquivo
+        with self.engine.connect() as conn:
+            df = read_sql_query(consulta, conn)
+            export(df, filename=arquivo, max_cols=-1, max_rows=-1, table_conversion="matplotlib")
+            conn.close()
+            return arquivo
 
     def criar_imagem_SQL_GGPS(self, consulta, arquivo = 'dist/temp.png', escalonadas=None):
-        if self.conn:
-            df = read_sql_query(consulta, self.conn)
+        with self.engine.connect() as conn:
+            df = read_sql_query(consulta, conn)
             if df.empty and escalonadas: return 'src/zeradas.png'
             export(df, filename=arquivo, max_cols=-1, max_rows=-1, table_conversion="matplotlib")
             dt = Image.open(arquivo)
@@ -216,18 +264,19 @@ class WA:
             modelo.paste(logo, (mid, 0), logo)
             modelo.paste(dt, (0, logo.height + 1))
             modelo.save(arquivo)
+            conn.close()
             return arquivo
     
 class Parcial:
-    def __init__(self, uid, pwd, server, db, hora_inicio = 0, hora_final = 23,):
+    def __init__(self, uid=None, pwd=None, server=None, database=None, bd=None, hora_inicio = 0, hora_final = 23, tipo='app'):
         self.hora_inicio = hora_inicio
         self.hora_final = hora_final
         self.whats = WA()
-        self.uid = uid
-        self.pwd = pwd
-        self.server = server
-        self.engine = self.whats.sql_connection(uid, pwd, server)
-        self.db = db
+        self.type = tipo
+        
+        if uid and pwd and server and database:
+            if not bd: self.engine = self.whats.sql_connection(uid, pwd, server, database)
+            else: self.engine = self.whats.sql_connection(uid, pwd, server, database, bd)
 
     def update(self):
         self.now = datetime.now().strftime('%d/%m/%Y %H:%M')
@@ -252,45 +301,37 @@ class Parcial:
         return alternated
     
     def main_loop(self, funcs: list):
+        if self.type == 'web': open_new_tab('https://web.whatsapp.com/')
         h = self.definir_inicio()
         while True:
             self.update()
             for f in funcs:
-                if type(f) == list:
+                if type(f) == list: # Dia de Semana
                     if self.fds == 'Sat' or self.fds == 'Sun':
                         if self.hora == h:
                             try:
-                                atalho('alt','tab')
-                                with self.engine.connect() as conn:
-                                    self.whats.conn = conn
-                                    for i in f: i()
-                                atalho('alt','tab')
+                                for i in f: i()
                                 h += 1
                             except Exception as erro: enviar_email(str(erro))
-                if type(f) == tuple:
+                if type(f) == tuple: # Fim de Semana
                     if self.fds != 'Sat' and self.fds != 'Sun':
                         if self.hora == h:
                             try:
-                                atalho('alt','tab')
-                                with self.engine.connect() as conn:
-                                    self.whats.conn = conn
-                                    for i in f: i()
-                                atalho('alt','tab')
+                                for i in f: i()
                                 h += 1
                             except Exception as erro: enviar_email(str(erro))
                 if self.hora == self.hora_final: h = self.hora_inicio
             dsp(h)
 
 if __name__ == '__main__':
-    p = Parcial('guilherme.breve','Gtaiv@130520','10.56.6.56','Vista_Replication_PRD')
-    dds = (
-        lambda: print('Inicio'),
-        lambda: p.whats.enviar_msg(
-            'Guilherme',
-            'Teste de Atualização',
-            p.whats.criar_imagem_SQL_GGPS('select top 1 nome from tarefa')
-        )
+    p = Parcial('guilherme.breve','Gtaiv@130520','10.56.6.56','Vista_Replication_PRD', 'MSSQL')
+    p.main_loop(
+        [
+            (
+                lambda: p.whats.enviar_msg_web(
+                    'guilherme','teste'
+                ),
+            ),
+        ],
     )
-    main = []
-    main.append(dds)
-    p.main_loop(main)
+    

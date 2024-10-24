@@ -7,3 +7,4 @@ dataframe_image
 pyodbc
 pyautogui
 sqlalchemy
+matplotlib
