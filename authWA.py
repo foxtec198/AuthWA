@@ -113,7 +113,6 @@ class WA:
         if server: server = quote_plus(server)
         if database: database = quote_plus(database)
 
-        print(bd)
         if bd == 'MSSQL': url = f'mssql://{uid}:{pwd}@{server}/{database}?driver={quote_plus(MSSQL[0])}&&TrustServerCertificate=yes'
         if bd == 'PSSQL': url = f"postgresql+psycopg2://{uid}:{pwd}@{server}/{database}"
         if bd == 'MySQL': url = f"mysql://{uid}:{pwd}@{server}/{database}"
@@ -322,16 +321,3 @@ class Parcial:
                             except Exception as erro: enviar_email(str(erro))
                 if self.hora == self.hora_final: h = self.hora_inicio
             dsp(h)
-
-if __name__ == '__main__':
-    p = Parcial('guilherme.breve','Gtaiv@130520','10.56.6.56','Vista_Replication_PRD', 'MSSQL')
-    p.main_loop(
-        [
-            (
-                lambda: p.whats.enviar_msg_web(
-                    'guilherme','teste'
-                ),
-            ),
-        ],
-    )
-    
