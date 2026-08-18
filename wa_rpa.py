@@ -205,27 +205,15 @@ class WA:
         pg.hotkey('alt','tab')
 
     def enviar_msg_web(self, nome, mensagem, img = None):
-        # Muda para o whatsapp
-        pg.hotkey('alt','tab')
-        sl(1)
-
-        # Pesquisa a Conversa
-        pg.hotkey('ctrl','alt','n')
-        sl(2)
-
-        # Pesquisa pelo nome/numero
-        cola(nome)
-        sl(2)
-
-        # Entra na conversa
-        pg.press('enter')
+        pg.hotkey('alt','tab') # Muda para o whatsapp
+        pg.hotkey('ctrl','alt','n') # Pesquisa a Conversa
+        cola(nome) # Pesquisa pelo nome/numero
+        pg.press('enter') # Entra na conversa
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
             pg.hotkey('ctrl','v')
-            sl(5)
             cola(mensagem)
-            sl(1)
             pg.press('enter')
             pg.press('esc')
         else: # Caso não tenha Imagem
@@ -289,14 +277,16 @@ class Parcial:
             self.engine = self.whats.sql_connection(uid, pwd, server, database, bd)
 
     def update(self):
-        self.now = datetime.now().strftime('%d/%m/%Y %H:%M')
-        self.date = datetime.date(datetime.today())
-        self.time = datetime.time(datetime.today())
-        self.hora = int(st('%H'))
-        self.day = st('%d')
-        self.month = st('%m')
-        self.year = st('%Y')
-        self.fds = st('%a')
+        self.now = datetime.now()
+        self.time = self.now.time()
+        self.hora = int(self.now.hour)
+
+        self.date = self.now.date()
+        self.day = self.now.day
+        self.month = self.now.month
+        self.year = self.now.year
+        self.fds = self.now.strftime('%a')
+
         if self.hora == 24: self.hora = 0
 
     def definir_inicio(self):
@@ -307,7 +297,6 @@ class Parcial:
         if self.hora_inicio == self.hora: alternated = self.hora_inicio
         if self.hora < self.hora_inicio: alternated = self.hora_inicio
         if self.hora > self.hora_inicio: alternated = self.hora + 1
-
         return alternated
     
     def main_loop(self, funcs: list):
