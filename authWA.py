@@ -18,7 +18,6 @@ from webbrowser import open_new_tab
 DBs = ['MSSQL','SQLITE','MySQL','PSSQL']
 MSSQL = ['ODBC Driver 18 for SQL Server',]
 
-
 pg.PAUSE = .8
 pg.FAILSAFE = False
 try: mkdir('logs')
@@ -26,17 +25,17 @@ except: ...
 logging.basicConfig(filename='logs/error_logs.log', filemode='a', level=logging.ERROR, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
 logger = logging.getLogger('root')
 
-def atalho(*args):
+def atalho_2(*args):
     with pg.hold(args[0]):
         pg.press(args[1])
 
-def atalho2(*args):
+def atalho_3(*args):
     with pg.hold(args[0]) and pg.hold(args[1]):
         pg.press(args[2])
 
 def cola(txt: str):
     copy(txt)
-    atalho('ctrl','v')
+    atalho_2('ctrl','v')
 
 def dsp(x):
     print(st(f'Horario de inicio {x} - %x - %X'))
@@ -121,10 +120,10 @@ class WA:
         return self.engine
 
     def enviar_msg_nc(self, num, mensagem, img = None):
-        atalho('alt','tab')
+        atalho_2('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        atalho('ctrl','n')
+        atalho_2('ctrl','n')
         sl(2)
         cola(num)
         sl(2)
@@ -137,7 +136,7 @@ class WA:
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            atalho('ctrl','v')
+            atalho_2('ctrl','v')
             sl(5)
             cola(mensagem)
             sl(1)
@@ -148,23 +147,23 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        atalho('alt','tab')
+        atalho_2('alt','tab')
 
     def enviar_msg(self, nome, mensagem, img = None):
-        atalho('alt','tab')
+        atalho_2('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        atalho('ctrl','f')
+        atalho_2('ctrl','f')
         sl(2)
         cola(nome)
         sl(2)
         # Entra na conversa
-        atalho('ctrl','1')
+        atalho_2('ctrl','1')
         sl(7)
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            atalho('ctrl','v')
+            atalho_2('ctrl','v')
             sl(6)
             cola(mensagem)
             sl(1)
@@ -175,27 +174,27 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        atalho('ctrl','f')
-        atalho('ctrl','a')
+        atalho_2('ctrl','f')
+        atalho_2('ctrl','a')
         pg.press('backspace')
-        atalho('alt','tab')
+        atalho_2('alt','tab')
 
     def continuos_msg(self, nome, listMsg, img = None):
-        atalho('alt','tab')
+        atalho_2('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        atalho('ctrl','f')
+        atalho_2('ctrl','f')
         sl(2)
         cola(nome)
         sl(2)
         # Entra na conversa
-        atalho('ctrl','1')
+        atalho_2('ctrl','1')
         sl(7)
 
         if img: # Caso tenha Imagem
             for mensagem in listMsg:
                 self.pc.write_image_to_clipboard(img)
-                atalho('ctrl','v')
+                atalho_2('ctrl','v')
                 sl(5)
                 cola(mensagem)
                 sl(1)
@@ -208,29 +207,30 @@ class WA:
                 pg.press('enter')
             pg.press('esc')
 
-        atalho('ctrl','f')
-        atalho('ctrl','a')
+        atalho_2('ctrl','f')
+        atalho_2('ctrl','a')
         pg.press('backspace')
-        atalho('alt','tab')
+        atalho_2('alt','tab')
 
     def enviar_msg_web(self, nome, mensagem, img = None):
-        atalho('alt','tab')
-        # Pesquisa a Conversa
+        # Muda para o whatsapp
+        atalho_2('alt','tab')
         sl(1)
-        atalho2('ctrl','alt','/')
-        atalho('ctrl','a')
+
+        # Pesquisa a Conversa
+        atalho_3('ctrl','alt','n')
         sl(2)
+
+        # Pesquisa pelo nome/numero
         cola(nome)
         sl(2)
+
         # Entra na conversa
         pg.press('enter')
-        sl(5)
-        imglocal = pg.locateCenterOnScreen('image.png')
-        pg.click(imglocal[0]+200, imglocal[1])
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            atalho('ctrl','v')
+            atalho_2('ctrl','v')
             sl(5)
             cola(mensagem)
             sl(1)
@@ -240,7 +240,8 @@ class WA:
             cola(mensagem)
             pg.press('enter')
             pg.press('esc')
-        atalho('alt','tab')
+
+        atalho_2('alt','tab') # Volta pro command
 
     def criar_imagem_SQL(self, consulta, arquivo = 'dist/temp.png'):
         with self.engine.connect() as conn:
@@ -267,15 +268,33 @@ class WA:
             return arquivo
     
 class Parcial:
-    def __init__(self, uid=None, pwd=None, server=None, database=None, bd=None, hora_inicio = 0, hora_final = 23, tipo='app'):
+    def __init__(self, uid=None, pwd=None, server=None, database=None, bd=DBs[0], hora_inicio = 0, hora_final = 23, tipo='app'):
+        """
+            ## PARAMS
+            UID - User Database 
+
+            PWD - Password Database
+            
+            SERVER - Server or Host Database
+
+            DATABASE - Name of Database
+
+            DB - Type for Database
+
+            HORA_INICIO - Init hour
+
+            HORA_FINAL - End hour 
+
+            TIPO - APP / WEB
+        """
+        
         self.hora_inicio = hora_inicio
         self.hora_final = hora_final
         self.whats = WA()
         self.type = tipo
         
-        if uid and pwd and server and database:
-            if not bd: self.engine = self.whats.sql_connection(uid, pwd, server, database)
-            else: self.engine = self.whats.sql_connection(uid, pwd, server, database, bd)
+        if uid and pwd and server and database: 
+            self.engine = self.whats.sql_connection(uid, pwd, server, database, bd)
 
     def update(self):
         self.now = datetime.now().strftime('%d/%m/%Y %H:%M')

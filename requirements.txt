@@ -2,7 +2,7 @@ mkdocs-material
 pyautogui
 pyperclip
 ctpaperclip
-pandas==2.1.4
+pandas
 dataframe_image
 pyodbc
 pyautogui
