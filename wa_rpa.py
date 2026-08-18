@@ -1,5 +1,5 @@
-from time import sleep as sl, strftime as st # Time
 import pyautogui as pg # Automate
+from time import sleep as sl, strftime as st # Time
 from pyperclip import copy # Trad Clipboard
 from ctpaperclip import PyClipboardPlus # Image to Clipboard
 from pandas import read_sql_query # Tratamento de Dados
@@ -18,24 +18,16 @@ from webbrowser import open_new_tab
 DBs = ['MSSQL','SQLITE','MySQL','PSSQL']
 MSSQL = ['ODBC Driver 18 for SQL Server',]
 
-pg.PAUSE = .8
+pg.PAUSE = 1
 pg.FAILSAFE = False
 try: mkdir('logs')
 except: ...
 logging.basicConfig(filename='logs/error_logs.log', filemode='a', level=logging.ERROR, format="Horario do erro: %(asctime)s - %(levelname)s, Aqruivo: %(filename)s, Mensagem:%(message)s")
 logger = logging.getLogger('root')
 
-def atalho_2(*args):
-    with pg.hold(args[0]):
-        pg.press(args[1])
-
-def atalho_3(*args):
-    with pg.hold(args[0]) and pg.hold(args[1]):
-        pg.press(args[2])
-
 def cola(txt: str):
     copy(txt)
-    atalho_2('ctrl','v')
+    pg.hotKey('ctrl','v')
 
 def dsp(x):
     print(st(f'Horario de inicio {x} - %x - %X'))
@@ -120,10 +112,10 @@ class WA:
         return self.engine
 
     def enviar_msg_nc(self, num, mensagem, img = None):
-        atalho_2('alt','tab')
+        pg.hotKey('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        atalho_2('ctrl','n')
+        pg.hotKey('ctrl','n')
         sl(2)
         cola(num)
         sl(2)
@@ -136,7 +128,7 @@ class WA:
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            atalho_2('ctrl','v')
+            pg.hotKey('ctrl','v')
             sl(5)
             cola(mensagem)
             sl(1)
@@ -147,23 +139,23 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        atalho_2('alt','tab')
+        pg.hotKey('alt','tab')
 
     def enviar_msg(self, nome, mensagem, img = None):
-        atalho_2('alt','tab')
+        pg.hotKey('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        atalho_2('ctrl','f')
+        pg.hotKey('ctrl','f')
         sl(2)
         cola(nome)
         sl(2)
         # Entra na conversa
-        atalho_2('ctrl','1')
+        pg.hotKey('ctrl','1')
         sl(7)
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            atalho_2('ctrl','v')
+            pg.hotKey('ctrl','v')
             sl(6)
             cola(mensagem)
             sl(1)
@@ -174,27 +166,27 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        atalho_2('ctrl','f')
-        atalho_2('ctrl','a')
+        pg.hotKey('ctrl','f')
+        pg.hotKey('ctrl','a')
         pg.press('backspace')
-        atalho_2('alt','tab')
+        pg.hotKey('alt','tab')
 
     def continuos_msg(self, nome, listMsg, img = None):
-        atalho_2('alt','tab')
+        pg.hotKey('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        atalho_2('ctrl','f')
+        pg.hotKey('ctrl','f')
         sl(2)
         cola(nome)
         sl(2)
         # Entra na conversa
-        atalho_2('ctrl','1')
+        pg.hotKey('ctrl','1')
         sl(7)
 
         if img: # Caso tenha Imagem
             for mensagem in listMsg:
                 self.pc.write_image_to_clipboard(img)
-                atalho_2('ctrl','v')
+                pg.hotKey('ctrl','v')
                 sl(5)
                 cola(mensagem)
                 sl(1)
@@ -207,18 +199,18 @@ class WA:
                 pg.press('enter')
             pg.press('esc')
 
-        atalho_2('ctrl','f')
-        atalho_2('ctrl','a')
+        pg.hotKey('ctrl','f')
+        pg.hotKey('ctrl','a')
         pg.press('backspace')
-        atalho_2('alt','tab')
+        pg.hotKey('alt','tab')
 
     def enviar_msg_web(self, nome, mensagem, img = None):
         # Muda para o whatsapp
-        atalho_2('alt','tab')
+        pg.hotkey('alt','tab')
         sl(1)
 
         # Pesquisa a Conversa
-        atalho_3('ctrl','alt','n')
+        pg.hotkey('ctrl','alt','n')
         sl(2)
 
         # Pesquisa pelo nome/numero
@@ -230,7 +222,7 @@ class WA:
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            atalho_2('ctrl','v')
+            pg.hotkey('ctrl','v')
             sl(5)
             cola(mensagem)
             sl(1)
@@ -241,7 +233,7 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        atalho_2('alt','tab') # Volta pro command
+        pg.hotkey('alt','tab') # Volta pro command
 
     def criar_imagem_SQL(self, consulta, arquivo = 'dist/temp.png'):
         with self.engine.connect() as conn:
