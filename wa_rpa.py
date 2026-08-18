@@ -27,7 +27,7 @@ logger = logging.getLogger('root')
 
 def cola(txt: str):
     copy(txt)
-    pg.hotKey('ctrl','v')
+    pg.hotkey('ctrl','v')
 
 def dsp(x):
     print(st(f'Horario de inicio {x} - %x - %X'))
@@ -112,10 +112,10 @@ class WA:
         return self.engine
 
     def enviar_msg_nc(self, num, mensagem, img = None):
-        pg.hotKey('alt','tab')
+        pg.hotkey('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        pg.hotKey('ctrl','n')
+        pg.hotkey('ctrl','n')
         sl(2)
         cola(num)
         sl(2)
@@ -128,7 +128,7 @@ class WA:
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            pg.hotKey('ctrl','v')
+            pg.hotkey('ctrl','v')
             sl(5)
             cola(mensagem)
             sl(1)
@@ -139,23 +139,23 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        pg.hotKey('alt','tab')
+        pg.hotkey('alt','tab')
 
     def enviar_msg(self, nome, mensagem, img = None):
-        pg.hotKey('alt','tab')
+        pg.hotkey('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        pg.hotKey('ctrl','f')
+        pg.hotkey('ctrl','f')
         sl(2)
         cola(nome)
         sl(2)
         # Entra na conversa
-        pg.hotKey('ctrl','1')
+        pg.hotkey('ctrl','1')
         sl(7)
 
         if img: # Caso tenha Imagem
             self.pc.write_image_to_clipboard(img)
-            pg.hotKey('ctrl','v')
+            pg.hotkey('ctrl','v')
             sl(6)
             cola(mensagem)
             sl(1)
@@ -166,27 +166,27 @@ class WA:
             pg.press('enter')
             pg.press('esc')
 
-        pg.hotKey('ctrl','f')
-        pg.hotKey('ctrl','a')
+        pg.hotkey('ctrl','f')
+        pg.hotkey('ctrl','a')
         pg.press('backspace')
-        pg.hotKey('alt','tab')
+        pg.hotkey('alt','tab')
 
     def continuos_msg(self, nome, listMsg, img = None):
-        pg.hotKey('alt','tab')
+        pg.hotkey('alt','tab')
         # Pesquisa a Conversa
         sl(3)
-        pg.hotKey('ctrl','f')
+        pg.hotkey('ctrl','f')
         sl(2)
         cola(nome)
         sl(2)
         # Entra na conversa
-        pg.hotKey('ctrl','1')
+        pg.hotkey('ctrl','1')
         sl(7)
 
         if img: # Caso tenha Imagem
             for mensagem in listMsg:
                 self.pc.write_image_to_clipboard(img)
-                pg.hotKey('ctrl','v')
+                pg.hotkey('ctrl','v')
                 sl(5)
                 cola(mensagem)
                 sl(1)
@@ -199,10 +199,10 @@ class WA:
                 pg.press('enter')
             pg.press('esc')
 
-        pg.hotKey('ctrl','f')
-        pg.hotKey('ctrl','a')
+        pg.hotkey('ctrl','f')
+        pg.hotkey('ctrl','a')
         pg.press('backspace')
-        pg.hotKey('alt','tab')
+        pg.hotkey('alt','tab')
 
     def enviar_msg_web(self, nome, mensagem, img = None):
         # Muda para o whatsapp

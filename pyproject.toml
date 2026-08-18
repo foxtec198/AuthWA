@@ -1,6 +1,6 @@
 [project]
 name = "wa_rpa"
-version = "26.8.2"
+version = "26.8.3"
 description = "Automações WhatsApp - Versão atualizada do AuthWA"
 readme = "README.md"
 
