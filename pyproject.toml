@@ -1,39 +1,41 @@
-[tool.poetry]
-name = "authwa"
-version = "0.5.0"
-description = "Automações WhatsApp"
-authors = ["Guilherme Breve <64221923+foxtec198@users.noreply.github.com>"]
+[project]
+name = "wa_rpa"
+version = "26.8.1"
+description = "Automações WhatsApp - Versão atualizada do AuthWA"
 readme = "README.md"
-packages = [{include = "authWA.py"}]
+
+authors = [
+    { name = "Guilherme Breve", email = "64221923+foxtec198@users.noreply.github.com" }
+]
+
+requires-python = ">=3.9,<4.0"
+
 classifiers = [
     "Programming Language :: Python :: 3.11",
     "Environment :: Console",
     "Development Status :: 5 - Production/Stable",
     "Natural Language :: Portuguese (Brazilian)",
     "Intended Audience :: Developers",
-]   
+]
 
-
-[tool.poetry.urls]  
+[project.urls]
 "Documentação" = "https://authwa.readthedocs.io"
 
 
-[tool.poetry.dependencies]
-python = "^3.9"
+[tool.poetry]
+packages = [
+    { include = "wa_rpa.py" }
+]
 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
 
 
-[tool.poetry.group.add.dependencies]
+[tool.poetry.group.docs.dependencies]
 mkdocs-material = "^9.5.9"
 
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[pypi]
-username = "__token__"
-password = "pypi-AgEIcHlwaS5vcmcCJDkwNGZmZWUwLWRmMjktNDBkMC1iNzZiLThjMWNhZmJiYTVmNgACDlsxLFsiYXV0aHdhIl1dAAIsWzIsWyI0MDAyNzI3Yi0wMWJiLTQ5MTAtYjdlNy00YzRiNzg5N2QzZjkiXV0AAAYg_LwlBtMdZJwAYsC-PQZi5jIANfsZGlvRVezPD-1cNPw"
